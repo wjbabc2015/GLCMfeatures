@@ -25,9 +25,6 @@ public class mainCal {
 			}
 			System.out.println();
 		}
-
-		
-		
 	}
 
 }

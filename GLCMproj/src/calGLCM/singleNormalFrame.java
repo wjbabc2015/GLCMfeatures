@@ -5,14 +5,18 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.io.File;
 
 import javax.swing.*;
 
 public class singleNormalFrame extends JFrame implements ActionListener, ItemListener{
 	
+	JPanel mainFrame;
 	JPanel pmemu;
 	JPanel pbutton;
+	JPanel degreeBox;
 	JPanel checkBox;
+	JPanel distanceBox;
 	
 	JButton run;
 	JButton back;
@@ -22,30 +26,41 @@ public class singleNormalFrame extends JFrame implements ActionListener, ItemLis
 	
 	JComboBox degree;
 	
+	JTextField distance;
+	
+	
 	boolean isSymetric = false;
 	boolean isNormalization = false;
 	
 	String degreeAngle = "";
 	
+	int elementDis = 1;
+	
 	
 	
 	public singleNormalFrame () {
 		
+		mainFrame = new JPanel(new BorderLayout ());
 		pmemu = new JPanel ();
 		pbutton = new JPanel ();
 		checkBox = new JPanel();
+		degreeBox = new JPanel();
+		distanceBox = new JPanel();
 		
-		this.setLayout(new GridLayout(3, 1));
-		pmemu.setLayout(new GridLayout(2, 1));
+		pmemu.setLayout(new GridLayout(4, 1));
 		checkBox.setLayout(new GridLayout(1, 2));
+		degreeBox.setLayout(new GridLayout(1, 2));
+		distanceBox.setLayout(new GridLayout(1, 2));
 		
 		
-		JLabel title = new JLabel ("Single Angle process");
+		JLabel title = new JLabel ("Single Angle process", JLabel.CENTER);
+		JLabel separate = new JLabel ("------------------------------------------", JLabel.CENTER);
 		title.setFont(new Font("Serif", Font.ITALIC, 30));
 		
-		this.add(title);
-		this.add(pmemu);
-		this.add(pbutton);
+		JLabel degreeLab = new JLabel ("Angle Degree: ");
+		JLabel distanceLab = new JLabel ("Distance: ");
+		
+		distance = new JTextField ();
 		
 		run = new JButton ("Run");
 		back = new JButton ("Back");
@@ -58,13 +73,26 @@ public class singleNormalFrame extends JFrame implements ActionListener, ItemLis
 		degree = new JComboBox (degreeScale);
 		degree.setSize(10, 5);
 		
-		pmemu.add(degree);
+		pmemu.add(degreeBox);
+		pmemu.add(separate);
+		pmemu.add(distanceBox);
 		pmemu.add(checkBox);
+		
 		checkBox.add(symetric);
 		checkBox.add(normal);
+		degreeBox.add(degreeLab);
+		degreeBox.add(degree);
+		distanceBox.add(distanceLab);
+		distanceBox.add(distance);
 		
 		pbutton.add(back);
 		pbutton.add(run);
+		
+		mainFrame.add(title, BorderLayout.PAGE_START);
+		mainFrame.add(pmemu, BorderLayout.CENTER);
+		mainFrame.add(pbutton, BorderLayout.PAGE_END);
+		
+		this.add(mainFrame);
 		
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
@@ -73,7 +101,8 @@ public class singleNormalFrame extends JFrame implements ActionListener, ItemLis
 		
 		this.setVisible(true);
 		this.pack();
-		//this.setSize(300, 400);
+		//pmemu.setSize(200, 100);
+		//this.setSize(600, 300);
 		
 		run.addActionListener(this);
 		back.addActionListener(this);
@@ -86,7 +115,41 @@ public class singleNormalFrame extends JFrame implements ActionListener, ItemLis
 	public void actionPerformed(ActionEvent e) {
 		
 		if (e.getSource() == run){
+			degreeAngle = degree.getSelectedItem().toString();
 			
+			elementDis = Integer.parseInt(distance.getText());
+			
+//System.out.println(degreeAngle + " " + elementDis + " " + isSymetric + " " + isNormalization);
+			
+			File loadingFile = new File ("C:/Users/jiabin/Desktop/GLCM_Cal/Image/45deg/camera0/PicA1009.bmp");
+
+			loadImage img = new loadImage (loadingFile);
+			
+			int[][] matrix = img.getGrayLevelMatrix();
+			
+			calculationGLCM glcm = new calculationGLCM (matrix, degreeAngle, elementDis, isSymetric, isNormalization);
+			
+			GLCMFeatures gf = new GLCMFeatures (glcm.getGLCM());
+			
+			double[] result = gf.getResult();
+			
+			System.out.println("Angular Second Moment: " + result[0]);
+			System.out.println("Contrast: " + result[1]);
+			System.out.println("Correlation: " + result[2]);
+			System.out.println("Inverse Difference Moment: " + result[3]);
+			System.out.println("Entropy: " + result[4]);
+			System.out.println("Sum of all GLCM elements: " + result[5]);
+			
+			
+			
+			
+/*			
+			for (int a = 0; a < 256 ;a ++ ) {
+				for (int b= 0; b< 256 ; b ++ ) {
+					System.out.print(result[a][b] + " ");
+				}
+				System.out.println();
+			}*/
 		}
 		
 		if (e.getSource() == back){
@@ -99,11 +162,11 @@ public class singleNormalFrame extends JFrame implements ActionListener, ItemLis
 	public void itemStateChanged(ItemEvent i) {
 		
 		if (i.getItemSelectable() == symetric){
-			isSymetric = true;
+			isSymetric = !isSymetric;
 		}
 		
 		if (i.getItemSelectable() == normal){
-			isNormalization = true;
+			isNormalization = !isNormalization;
 		}
 		
 	}

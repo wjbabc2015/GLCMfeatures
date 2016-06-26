@@ -3,89 +3,124 @@ package calGLCM;
 public class calculationGLCM {
 	
 	int[][] matrix;
-	int dx, dy;
+	int dx = 0;
+	int dy = 0;
 	String degree;
+	int distance;
+	int count = 0;
 	
-	int[][] GLCM = new int[256][256];
+	boolean symetic;
+	boolean normalization;
+	
+	double[][] GLCM = new double[256][256];
 
-	public calculationGLCM(int[][] graylevelMatrix, int dx, int dy, String degree){
+	public calculationGLCM(int[][] graylevelMatrix, String degree, int distance, boolean symetic, boolean normalization){
 		this.matrix = graylevelMatrix;
-		this.dx = dx;
-		this.dy = dy;
 		this.degree = degree;
+		this.distance = distance;
+		this.symetic = symetic;
+		this.normalization = normalization;
 		
-		computeGLCM ();
+		computeXY (distance, degree);
+		
+		computeGLCM (symetic);
+		
+		if (normalization) {
+			computeNormalization();
+		}
 		
 	}
 	
-	private void computeGLCM (){
+	private void computeXY(int distance2, String anDegree) {
 		
-		switch (degree) {
-		case "0": {
-			if (dx > 0){
-				for (int h = 0; h < matrix.length; h++){
-					for (int w = 0; w < matrix[h].length - dx; w++){
-						int a = matrix[h][w];
-						int b = matrix[h][w + dx];
-						
-						GLCM[a][b] ++;
+		if (anDegree == "0"){
+			dx = distance2;
+		}else if (anDegree == "45"){
+			dx = distance2;
+			dy = -distance2;
+		}else if(anDegree == "90"){
+			dy = -distance2;
+		}else {
+			dx = -distance2;
+			dy = distance2;
+		}
+	}
+
+	private void computeGLCM (boolean sym){
+		
+		if (dx > 0 && dy == 0){
+			for (int h = 0; h < matrix.length; h++){
+				for (int w = 0; w < matrix[h].length - dx; w++){
+					int a = matrix[h][w];
+					int b = matrix[h + dy][w + dx];
+					
+					GLCM[a][b] ++;
+					count ++;
+					
+					if (sym){
 						GLCM[b][a] ++;
+						count ++;
 					}
 				}
 			}
-			break;
-		}
-		
-		case "45":{
-			if (dx > 0 && dy > 0){
-				for (int h = dy; h < matrix.length; h++){
-					for (int w = 0; w < matrix[h].length - dx; w++){
-						int a = matrix[h][w];
-						int b = matrix[h - dy][w + dx];
-						
-						GLCM[a][b] ++;
+		}else if (dx > 0 && dy < 0){
+			for (int h = -dy; h < matrix.length; h++){
+				for (int w = 0; w < matrix[h].length - dx; w++){
+					int a = matrix[h][w];
+					int b = matrix[h + dy][w + dx];
+					
+					GLCM[a][b] ++;
+					count ++;
+					
+					if (sym){
 						GLCM[b][a] ++;
+						count ++;
 					}
 				}
 			}
-			break;
-		}
-		
-		case "90":{
-			if (dy > 0){
-				for (int h = 0; h < matrix.length; h++){
-					for (int w = dx; w < matrix[h].length; w++){
-						int a = matrix[h][w];
-						int b = matrix[h][w - dx];
-						
-						GLCM[a][b] ++;
+		}else if (dx == 0 && dy < 0){
+			for (int h = -dy; h < matrix.length; h++){
+				for (int w = 0; w < matrix[h].length; w++){
+					int a = matrix[h][w];
+					int b = matrix[h + dy][w + dx];
+					
+					GLCM[a][b] ++;
+					count ++;
+					
+					if (sym){
 						GLCM[b][a] ++;
+						count ++;
 					}
 				}
 			}
-			break;
-		}
-		
-		case "135":{
-			if (dx > 0){
-				for (int h = dy; h < matrix.length; h++){
-					for (int w = dx; w < matrix[h].length; w++){
-						int a = matrix[h][w];
-						int b = matrix[h - dy][w - dx];
-						
-						GLCM[a][b] ++;
+		}else if (dx < 0 && dy < 0){
+			for (int h = -dy; h < matrix.length; h++){
+				for (int w = -dx; w < matrix[h].length; w++){
+					int a = matrix[h][w];
+					int b = matrix[h + dy][w + dx];
+					
+					GLCM[a][b] ++;
+					count ++;
+					
+					if (sym){
 						GLCM[b][a] ++;
+						count ++;
 					}
 				}
 			}
-			break;
-		}
-		
-		default: break;
 		}
 	}
 	
-	public int[][] getGLCM (){
+	private void computeNormalization (){
+		
+		for (int r = 0; r < GLCM.length; r++){
+			for (int c = 0; c < GLCM[r].length; c++){
+				GLCM[r][c] = GLCM[r][c] / (double) count;
+			}
+		}
+	}
+
+	public double[][] getGLCM (){
 		return GLCM;
 	}
 	

@@ -112,7 +112,8 @@ public class calculationGLCM {
 	}
 	
 	private void computeNormalization (){
-		
+
+//System.out.println(count);
 		for (int r = 0; r < GLCM.length; r++){
 			for (int c = 0; c < GLCM[r].length; c++){
 				GLCM[r][c] = GLCM[r][c] / (double) count;

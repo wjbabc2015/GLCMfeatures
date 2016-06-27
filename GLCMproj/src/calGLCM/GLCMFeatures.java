@@ -24,6 +24,14 @@ public class GLCMFeatures {
 		this.matrix = glcm;
 		result = new double [6];
 		
+/*					
+		for (int a = 0; a < 256 ;a ++ ) {
+			for (int b= 0; b< 256 ; b ++ ) {
+				System.out.print(matrix[a][b] + " ");
+			}
+			System.out.println();
+		}*/
+		
 		doIcalculateASM ();
 		doIcalculateContrast ();
 		doIcalculateCorrelation ();
@@ -105,7 +113,7 @@ public class GLCMFeatures {
 			
 			for (int b = 0; b<256; b ++){
 				if (matrix[a][b] != 0){
-					result[4] -= (matrix[a][b]*(Math.log(matrix[a][b])));
+					result[4] += (matrix[a][b]*(Math.log(matrix[a][b])));
 					result[5] +=  matrix[a][b];
 				}
 			}

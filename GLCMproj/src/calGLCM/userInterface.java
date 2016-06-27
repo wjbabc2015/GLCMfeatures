@@ -55,6 +55,7 @@ public class userInterface extends JFrame implements ActionListener {
 		
 		if (e.getSource() == choice2){
 			mutipleNormalFrame mf = new mutipleNormalFrame();
+			this.dispose();
 		}
 	}
 	

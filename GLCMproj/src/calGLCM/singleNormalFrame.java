@@ -121,24 +121,27 @@ public class singleNormalFrame extends JFrame implements ActionListener, ItemLis
 			
 //System.out.println(degreeAngle + " " + elementDis + " " + isSymetric + " " + isNormalization);
 			
-			File loadingFile = new File ("C:/Users/jiabin/Desktop/GLCM_Cal/Image/45deg/camera0/PicA1009.bmp");
+			for (int n = 0; n < 10; n++){
+				File loadingFile = new File ("C:/Users/jiabin/Desktop/GLCM_Cal/Image/45deg/camera0/PicA100"+ n +".bmp");
 
-			loadImage img = new loadImage (loadingFile);
-			
-			int[][] matrix = img.getGrayLevelMatrix();
-			
-			calculationGLCM glcm = new calculationGLCM (matrix, degreeAngle, elementDis, isSymetric, isNormalization);
-			
-			GLCMFeatures gf = new GLCMFeatures (glcm.getGLCM());
-			
-			double[] result = gf.getResult();
-			
-			System.out.println("Angular Second Moment: " + result[0]);
-			System.out.println("Contrast: " + result[1]);
-			System.out.println("Correlation: " + result[2]);
-			System.out.println("Inverse Difference Moment: " + result[3]);
-			System.out.println("Entropy: " + result[4]);
-			System.out.println("Sum of all GLCM elements: " + result[5]);
+				loadImage img = new loadImage (loadingFile);
+				
+				int[][] matrix = img.getGrayLevelMatrix();
+				
+				calculationGLCM glcm = new calculationGLCM (matrix, degreeAngle, elementDis, isSymetric, isNormalization);
+				
+				GLCMFeatures gf = new GLCMFeatures (glcm.getGLCM());
+				
+				double[] result = gf.getResult();
+				
+				System.out.println("Angular Second Moment: " + result[0]);
+				System.out.println("Contrast: " + result[1]);
+				System.out.println("Correlation: " + result[2]);
+				System.out.println("Inverse Difference Moment: " + result[3]);
+				System.out.println("Entropy: " + result[4]);
+				System.out.println("Sum of all GLCM elements: " + result[5]);
+				System.out.println();
+			}
 			
 			
 			

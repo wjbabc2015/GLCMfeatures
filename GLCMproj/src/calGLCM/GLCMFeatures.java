@@ -111,9 +111,9 @@ public class GLCMFeatures {
 		
 		for (int a = 0; a < 256; a ++){
 			
-			for (int b = 0; b<256; b ++){
+			for (int b = 0; b < 256; b ++){
 				if (matrix[a][b] != 0){
-					result[4] += (matrix[a][b]*(Math.log(matrix[a][b])));
+					result[4] += -(matrix[a][b]*(Math.log(matrix[a][b])));
 					result[5] +=  matrix[a][b];
 				}
 			}

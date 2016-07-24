@@ -49,8 +49,10 @@ public class loadImage {
 			for (int w = 0; w < width; w ++){
 				Color c = new Color (image.getRGB(w, h));
 				
-				result[h][w] = (int) (c.getRed() * 0.2989) + (int)(c.getGreen() * 0.5870) + (int)(c.getBlue() * 0.114);
-				//result[h][w] = (c.getRed() + c.getGreen() + c.getBlue()) / 3;
+				int rgbValue = (c.getRed() + c.getGreen() + c.getBlue()) / 3;
+						
+				//result[h][w] = (int) (c.getRed() * 0.2989) + (int)(c.getGreen() * 0.5870) + (int)(c.getBlue() * 0.114);
+				result[h][w] = (int) (0.000004 * rgbValue * rgbValue * rgbValue + 0.003 * rgbValue * rgbValue - 0.033 * rgbValue + 1.8897);
 			}
 		}
 		
@@ -61,7 +63,7 @@ public class loadImage {
 		
 		int[] result = new int[3];
 		
-		Color c = new Color (image.getRGB(0, 39));
+		Color c = new Color (image.getRGB(248, 134));    //x , y 
 		
 		result[0] = c.getRed();
 		result[1] = c.getGreen();
@@ -86,15 +88,17 @@ public class loadImage {
 		
 		int[][] tempResult = lI.getGrayLevelMatrix();
 		int[] testResult = lI.getRGBvalue();
-		
-		for (int row = 40; row < 50; row ++){
-			for (int column = 0; column < tempResult[row].length; column ++){
+/*		
+		for (int row = 250; row < 260; row ++){
+			for (int column = 230; column < 240; column ++){
 				System.out.print(tempResult[row][column] + " ");
 			}
 			System.out.println();
 		}
+*/		
+		//System.out.println(tempResult.length + " " + tempResult[1].length);
 		
-		System.out.println(tempResult.length + " " + tempResult[1].length);
+		System.out.println(tempResult[32][242]);
 		
 		System.out.println(testResult[0] + " " + testResult[1] + " " + testResult[2]);
 		

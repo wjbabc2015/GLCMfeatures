@@ -37,10 +37,10 @@ public class calculationGLCM {
 			dx = distance2;
 		}else if (anDegree == "45"){
 			dx = distance2;
-			dy = -distance2;
+			dy = distance2;
 		}else if(anDegree == "90"){
-			dy = -distance2;
-		}else {
+			dy = distance2;
+		}else if (anDegree == "135"){
 			dx = -distance2;
 			dy = distance2;
 		}
@@ -52,7 +52,7 @@ public class calculationGLCM {
 			for (int h = 0; h < matrix.length; h++){
 				for (int w = 0; w < matrix[h].length - dx; w++){
 					int a = matrix[h][w];
-					int b = matrix[h + dy][w + dx];
+					int b = matrix[h][w + dx];
 					
 					GLCM[a][b] ++;
 					count ++;
@@ -63,11 +63,11 @@ public class calculationGLCM {
 					}
 				}
 			}
-		}else if (dx > 0 && dy < 0){
-			for (int h = -dy; h < matrix.length; h++){
+		}else if (dx > 0 && dy > 0){
+			for (int h = dy; h < matrix.length; h++){
 				for (int w = 0; w < matrix[h].length - dx; w++){
 					int a = matrix[h][w];
-					int b = matrix[h + dy][w + dx];
+					int b = matrix[h - dy][w + dx];
 					
 					GLCM[a][b] ++;
 					count ++;
@@ -78,11 +78,11 @@ public class calculationGLCM {
 					}
 				}
 			}
-		}else if (dx == 0 && dy < 0){
-			for (int h = -dy; h < matrix.length; h++){
+		}else if (dx == 0 && dy > 0){
+			for (int h = dy; h < matrix.length; h++){
 				for (int w = 0; w < matrix[h].length; w++){
 					int a = matrix[h][w];
-					int b = matrix[h + dy][w + dx];
+					int b = matrix[h - dy][w];
 					
 					GLCM[a][b] ++;
 					count ++;
@@ -93,11 +93,11 @@ public class calculationGLCM {
 					}
 				}
 			}
-		}else if (dx < 0 && dy < 0){
-			for (int h = -dy; h < matrix.length; h++){
+		}else if (dx < 0 && dy > 0){
+			for (int h = dy; h < matrix.length; h++){
 				for (int w = -dx; w < matrix[h].length; w++){
 					int a = matrix[h][w];
-					int b = matrix[h + dy][w + dx];
+					int b = matrix[h - dy][w + dx];
 					
 					GLCM[a][b] ++;
 					count ++;

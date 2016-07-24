@@ -137,6 +137,16 @@ public class mutipleNormalFrame extends JFrame implements ActionListener, ItemLi
 		
 		
 	}
+	
+	private double[][] matrixNormalization (double[][] matrix, int cout){
+		
+		for (int a = 0; a < 256; a++){
+			for (int b = 0; b < 256; b++){
+				matrix[a][b] /= cout;
+			}
+		}
+		return matrix;
+	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -154,32 +164,34 @@ public class mutipleNormalFrame extends JFrame implements ActionListener, ItemLi
 			int count = 0;
 			
 			if (angle[0]){
-				glcm1 = new calculationGLCM (matrix, "0", elementDis, isSymetric, false);
+				glcm1 = new calculationGLCM (matrix, "0", elementDis, isSymetric, true);
 				
 				glcm = mergeMatrix(glcm, glcm1.getGLCM());
 				count ++;
 			}
 			
 			if (angle[1]){
-				glcm2 = new calculationGLCM (matrix, "45", elementDis, isSymetric, false);
+				glcm2 = new calculationGLCM (matrix, "45", elementDis, isSymetric, true);
 				
 				glcm = mergeMatrix(glcm, glcm2.getGLCM());
 				count ++;
 			}
 			
 			if (angle[2]){
-				glcm3 = new calculationGLCM (matrix, "90", elementDis, isSymetric, false);
+				glcm3 = new calculationGLCM (matrix, "90", elementDis, isSymetric, true);
 				
 				glcm = mergeMatrix(glcm, glcm3.getGLCM());
 				count ++;
 			}
 			
 			if (angle[3]){
-				glcm4 = new calculationGLCM (matrix, "135", elementDis, isSymetric, false);
+				glcm4 = new calculationGLCM (matrix, "135", elementDis, isSymetric, true);
 				
 				glcm = mergeMatrix(glcm, glcm4.getGLCM());
 				count ++;
 			}
+			
+			glcm = matrixNormalization (glcm, count);
 
 //System.out.println(count + " " + elementDis + " " + isSymetric + " " + angle[0] + " " + angle[1] + " " + angle[2] + " " + angle[3]);
 /*			

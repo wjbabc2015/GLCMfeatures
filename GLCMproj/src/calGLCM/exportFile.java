@@ -4,32 +4,76 @@ import java.io.*;
 
 public class exportFile {
 	
-	double[] exportResult;
+	String fileName;
 
-	public exportFile (double[] result) {
-		this.exportResult = result;
-		fileProcessing();
+	public exportFile (String name) {
+		this.fileName = name;
 	}
 	
 	public void initiateFile () {
+		PrintWriter pw = null;
 		try {
-			PrintWriter pw = new PrintWriter (new File("C:/Users/jiabin/Desktop/GLCM_Cal/result.csv"));
+			pw = new PrintWriter (new File("C:/Users/jiabin/Desktop/GLCM_Cal/" + fileName + ".csv"));
 			
 			StringBuilder sb = new StringBuilder ();
-			sb.
+			
+			sb.append("Pic\\Features");
+			sb.append(",");
+			sb.append("ASM");
+			sb.append(',');
+			sb.append("CON");
+			sb.append(',');
+			sb.append("COR");
+			sb.append(',');
+			sb.append("IDM");
+			sb.append(',');
+			sb.append("ENT");
+			sb.append('\n');
+			
+			pw.write(sb.toString());
+			
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}finally {
+			if (pw != null) pw.close();
 		}
 		
 	}
 	
-	private void fileProcessing (){
+	public void fileProcessing (double[] result, String nameTitle) throws IOException{
+		PrintWriter pw = null;
 		try {
-			PrintWriter pw = new PrintWriter(new File("C:/Users/jiabin/Desktop/GLCM_Cal/result.csv"));
+			pw = new PrintWriter(new FileWriter("C:/Users/jiabin/Desktop/GLCM_Cal/" + fileName + ".csv", true));
+			
+			StringBuilder sb = new StringBuilder ();
+			
+			sb.append(nameTitle);
+			sb.append(',');
+			
+			sb.append(result[0]);
+			sb.append(',');
+			
+			sb.append(result[1]);
+			sb.append(',');
+			
+			sb.append(result[2]);
+			sb.append(',');
+			
+			sb.append(result[3]);
+			sb.append(',');
+			
+			sb.append(result[4]);
+			sb.append(',');
+			
+			sb.append('\n');
+			
+			pw.write(sb.toString());
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}finally {
+			if (pw != null) pw.close();
 		}
 	}
 }

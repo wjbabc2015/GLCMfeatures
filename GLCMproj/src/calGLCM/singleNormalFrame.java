@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.File;
+import java.io.IOException;
 
 import javax.swing.*;
 
@@ -115,6 +116,11 @@ public class singleNormalFrame extends JFrame implements ActionListener, ItemLis
 	public void actionPerformed(ActionEvent e) {
 		
 		if (e.getSource() == run){
+			
+			exportFile ef = new exportFile ("singleResult");
+			
+			ef.initiateFile();
+			
 			degreeAngle = degree.getSelectedItem().toString();
 			
 			elementDis = Integer.parseInt(distance.getText());
@@ -134,13 +140,20 @@ public class singleNormalFrame extends JFrame implements ActionListener, ItemLis
 				
 				double[] result = gf.getResult();
 				
+				try {
+					ef.fileProcessing(result, "PicA100" + n);
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+/*				
 				System.out.println("Angular Second Moment: " + result[0]);
 				System.out.println("Contrast: " + result[1]);
 				System.out.println("Correlation: " + result[2]);
 				System.out.println("Inverse Difference Moment: " + result[3]);
 				System.out.println("Entropy: " + result[4]);
 				System.out.println("Sum of all GLCM elements: " + result[5]);
-				System.out.println();
+				System.out.println();*/
 			}
 			
 			

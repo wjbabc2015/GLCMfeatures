@@ -136,12 +136,15 @@ public class singleNormalFrame extends JFrame implements ActionListener, ItemLis
 				
 				calculationGLCM glcm = new calculationGLCM (matrix, degreeAngle, elementDis, isSymetric, isNormalization);
 				
+				
+				
 				GLCMFeatures gf = new GLCMFeatures (glcm.getGLCM());
 				
 				double[] result = gf.getResult();
 				
 				try {
 					ef.fileProcessing(result, "PicA100" + n);
+					ef.outCVS(glcm.getGLCM());
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();

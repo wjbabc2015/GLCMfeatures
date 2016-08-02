@@ -42,8 +42,11 @@ public class loadImage {
 	 * @return 2-D matrix with GLs value
 	 */
 	private int[][] imageToGray (BufferedImage image){
-		int height = image.getHeight();
-		int width = image.getWidth();
+		
+		Raster raster = image.getData();
+		
+		int height = raster.getHeight();
+		int width = raster.getWidth();
 		
 		int[][] result = new int[height][width];
 		
@@ -51,10 +54,11 @@ public class loadImage {
 			for (int w = 0; w < width; w ++){
 				Color c = new Color (image.getRGB(w, h));
 				
-				int rgbValue = (c.getRed() + c.getGreen() + c.getBlue()) / 3;
+				//int rgbValue = (c.getRed() + c.getGreen() + c.getBlue()) / 3;
 						
 				//result[h][w] = (int) (c.getRed() * 0.2989) + (int)(c.getGreen() * 0.5870) + (int)(c.getBlue() * 0.114);
-				result[h][w] = (int) (0.000004 * rgbValue * rgbValue * rgbValue + 0.003 * rgbValue * rgbValue - 0.033 * rgbValue + 1.8897);
+				//result[h][w] = (int) (0.000004 * rgbValue * rgbValue * rgbValue + 0.003 * rgbValue * rgbValue - 0.033 * rgbValue + 1.8897);
+				result[h][w] = raster.getSample(w, h, 0);
 			}
 		}
 		
@@ -209,6 +213,7 @@ System.out.println(bpalette[14]);
 		
     return (Image) null;
     }
+
 	
 	public static void main(String[] args) {
 		
@@ -217,8 +222,8 @@ System.out.println(bpalette[14]);
 		loadImage lI = new loadImage (loadingFile);
 		
 		int[][] tempResult = lI.getGrayLevelMatrix();
-		int[] testResult = lI.getRGBvalue();
-				
+		//int[] testResult = lI.getRGBvalue();
+		/*				
 		for (int row = 250; row < 260; row ++){
 			for (int column = 230; column < 240; column ++){
 				System.out.print(tempResult[row][column] + " ");
@@ -227,12 +232,15 @@ System.out.println(bpalette[14]);
 		}
 		
 		//System.out.println(tempResult.length + " " + tempResult[1].length);
-		
+	
 		System.out.println(tempResult[32][242]);
 		
 		System.out.println(testResult[0] + " " + testResult[1] + " " + testResult[2]);
-		/*		
+		
 		loadImage lI = new loadImage();
 		Image i = lI.loadbitmap("C:/Users/jiabin/Desktop/GLCM_Cal/Image/45deg/camera0/", "PicA1009.bmp");*/
+		
+		exportFile ef = new exportFile();
+		ef.outCVS (tempResult);
 	}
 }

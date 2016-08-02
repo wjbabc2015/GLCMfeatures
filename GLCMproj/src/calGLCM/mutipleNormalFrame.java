@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.File;
+import java.io.IOException;
 
 import javax.swing.*;
 
@@ -152,75 +153,100 @@ public class mutipleNormalFrame extends JFrame implements ActionListener, ItemLi
 	public void actionPerformed(ActionEvent e) {
 		
 		if (e.getSource() == run){
-			elementDis = Integer.parseInt(distance.getText());
 			
-			File loadingFile = new File ("C:/Users/jiabin/Desktop/GLCM_Cal/Image/45deg/camera0/PicA1009.bmp");
-
-			loadImage img = new loadImage (loadingFile);
+			exportFile ef = new exportFile("multiAngle");
+			ef.initiateFile();
 			
-			int[][] matrix = img.getGrayLevelMatrix();
-			
-			double[][] glcm = new double[256][256];
-			int count = 0;
-			
-			if (angle[0]){
-				glcm1 = new calculationGLCM (matrix, "0", elementDis, isSymetric, true);
+			for (int num = 0; num < 10; num++){
+				elementDis = Integer.parseInt(distance.getText());
 				
-				glcm = mergeMatrix(glcm, glcm1.getGLCM());
-				count ++;
-			}
-			
-			if (angle[1]){
-				glcm2 = new calculationGLCM (matrix, "45", elementDis, isSymetric, true);
+				File loadingFile = new File ("C:/Users/jiabin/Desktop/GLCM_Cal/Image/45deg/camera0/PicA100"+ num +".bmp");
+	
+				loadImage img = new loadImage (loadingFile);
 				
-				glcm = mergeMatrix(glcm, glcm2.getGLCM());
-				count ++;
-			}
-			
-			if (angle[2]){
-				glcm3 = new calculationGLCM (matrix, "90", elementDis, isSymetric, true);
+				int[][] matrix = img.getGrayLevelMatrix();
 				
-				glcm = mergeMatrix(glcm, glcm3.getGLCM());
-				count ++;
-			}
-			
-			if (angle[3]){
-				glcm4 = new calculationGLCM (matrix, "135", elementDis, isSymetric, true);
+				double[][] glcm = new double[256][256];
+				int count = 0;
 				
-				glcm = mergeMatrix(glcm, glcm4.getGLCM());
-				count ++;
-			}
-			
-			glcm = matrixNormalization (glcm, count);
-
-//System.out.println(count + " " + elementDis + " " + isSymetric + " " + angle[0] + " " + angle[1] + " " + angle[2] + " " + angle[3]);
-/*			
-			for (int r = 0; r < 256; r ++){
-				for (int c = 0; c < 256; c ++){
-					glcm[r][c] /= count;
+				if (angle[0]){
+					glcm1 = new calculationGLCM (matrix, "0", elementDis, isSymetric, true);
+					
+					glcm = mergeMatrix(glcm, glcm1.getGLCM());
+					count ++;
 				}
-			}
-*/			
-			
-			GLCMFeatures gf = new GLCMFeatures (glcm);
-			
-			double[] result = gf.getResult();
-			
-			System.out.println("Angular Second Moment: " + result[0]);
-			System.out.println("Contrast: " + result[1]);
-			System.out.println("Correlation: " + result[2]);
-			System.out.println("Inverse Difference Moment: " + result[3]);
-			System.out.println("Entropy: " + result[4]);
-			System.out.println("Sum of all GLCM elements: " + result[5]);
-			
-/*					
-			for (int a = 0; a < 256 ;a ++ ) {
-				for (int b= 0; b< 256 ; b ++ ) {
-					System.out.print(glcm[a][b] + " ");
+				
+				if (angle[1]){
+					glcm2 = new calculationGLCM (matrix, "45", elementDis, isSymetric, true);
+					
+					glcm = mergeMatrix(glcm, glcm2.getGLCM());
+					count ++;
 				}
-				System.out.println();
+				
+				if (angle[2]){
+					glcm3 = new calculationGLCM (matrix, "90", elementDis, isSymetric, true);
+					
+					glcm = mergeMatrix(glcm, glcm3.getGLCM());
+					count ++;
+				}
+				
+				if (angle[3]){
+					glcm4 = new calculationGLCM (matrix, "135", elementDis, isSymetric, true);
+					
+					glcm = mergeMatrix(glcm, glcm4.getGLCM());
+					count ++;
+				}
+				
+				glcm = matrixNormalization (glcm, count);
+				
+				//ef.outCVS(glcm);
+	
+	//System.out.println(count + " " + elementDis + " " + isSymetric + " " + angle[0] + " " + angle[1] + " " + angle[2] + " " + angle[3]);
+	/*			
+				for (int r = 0; r < 256; r ++){
+					for (int c = 0; c < 256; c ++){
+						glcm[r][c] /= count;
+					}
+				}
+	*/			
+				
+				GLCMFeatures gf = new GLCMFeatures (glcm);
+				
+				double[] result = gf.getResult();
+
+				/*				
+				System.out.println("Autocorrelation: " + result[0]);
+				System.out.println("Contrast: " + result[1]);
+				System.out.println("Correlation: " + result[2]);
+				System.out.println("Cluster Prominence: " + result[3]);
+				System.out.println("Cluster Shade: " + result[4]);
+				System.out.println("Dissimilarity: " + result[5]);
+				System.out.println("Energy: " + result[6]);
+				System.out.println("Entropy: " + result[7]);
+				System.out.println("Homogeneity: " + result[8]);
+				System.out.println("Maximum Probability: " + result[9]);
+				System.out.println("Variance: " + result[10]);
+				System.out.println("Sum Average: " + result[11]);
+				System.out.println("Sum Entropy: " + result[12]);
+				System.out.println("Difference Entropy: " + result[13]);
+				System.out.println("IDM: " + result[14]);
+				
+					
+				for (int a = 0; a < 256 ;a ++ ) {
+					for (int b= 0; b< 256 ; b ++ ) {
+						System.out.print(glcm[a][b] + " ");
+					}
+					System.out.println();
+				}
+*/		
+				try {
+					ef.fileProcessing(result, "PicA100" + num);
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			
 			}
-*/				
 			
 			
 		}

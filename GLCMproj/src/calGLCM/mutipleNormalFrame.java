@@ -170,28 +170,28 @@ public class mutipleNormalFrame extends JFrame implements ActionListener, ItemLi
 				int count = 0;
 				
 				if (angle[0]){
-					glcm1 = new calculationGLCM (matrix, "0", elementDis, isSymetric, true);
+					glcm1 = new calculationGLCM (matrix, "0", elementDis, isSymetric, false);
 					
 					glcm = mergeMatrix(glcm, glcm1.getGLCM());
 					count ++;
 				}
 				
 				if (angle[1]){
-					glcm2 = new calculationGLCM (matrix, "45", elementDis, isSymetric, true);
+					glcm2 = new calculationGLCM (matrix, "45", elementDis, isSymetric, false);
 					
 					glcm = mergeMatrix(glcm, glcm2.getGLCM());
 					count ++;
 				}
 				
 				if (angle[2]){
-					glcm3 = new calculationGLCM (matrix, "90", elementDis, isSymetric, true);
+					glcm3 = new calculationGLCM (matrix, "90", elementDis, isSymetric, false);
 					
 					glcm = mergeMatrix(glcm, glcm3.getGLCM());
 					count ++;
 				}
 				
 				if (angle[3]){
-					glcm4 = new calculationGLCM (matrix, "135", elementDis, isSymetric, true);
+					glcm4 = new calculationGLCM (matrix, "135", elementDis, isSymetric, false);
 					
 					glcm = mergeMatrix(glcm, glcm4.getGLCM());
 					count ++;

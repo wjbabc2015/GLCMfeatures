@@ -50,7 +50,8 @@ public class GLCMFeatures {
 			}
 			System.out.println();
 		}*/
-		
+
+		doNormalization ();
 		initialization();
 		doIcalculateAutocorrelation();
 		doIcalculateContrast ();
@@ -68,6 +69,23 @@ public class GLCMFeatures {
 		
 	}
 	
+	private void doNormalization () {
+
+		for (double[] eleArray : matrix) {
+			for (double ele : eleArray) {
+				sum += ele;
+			}
+		}
+
+//System.out.println(sum);	
+
+		for (int r = 0; r < matrix.length; r ++){
+			for (int w = 0; w < matrix[1].length; w ++){
+				matrix[r][w] = matrix[r][w] / sum;
+			}
+		}
+	}
+	
 	private void initialization (){
 		
 		for (int r = 0; r < matrix.length; r ++){
@@ -76,29 +94,36 @@ public class GLCMFeatures {
 				mulContrast[r][w] += (r - w) * (r - w);
 				mulDissimilarity[r][w] += Math.abs(r - w);
 				
-				px += r * matrix[r][w];
-				py += w * matrix[r][w];
+				px += (r + 1) * matrix[r][w];
+				py += (w + 1) * matrix[r][w];
 				
 				pxplusy[r + w] += matrix[r][w];
 				pxminusy[Math.abs(r - w)] += matrix[r][w];
 				
-				stdevx=stdevx+(r-px)*(r-px)*matrix [r][w];
-				stdevy=stdevy+(w-py)*(w-py)*matrix [r][w];
-				
-				sum += matrix[r][w];
 			}
+		}
+		
+		for (int r = 0; r < matrix.length; r ++){
+			for (int w = 0; w < matrix[r].length; w++){
+				
+//System.out.println(stdevx);
+				stdevx=stdevx+(r-px + 1)*(r-px + 1)*matrix [r][w];
+				stdevy=stdevy+(w-py + 1)*(w-py + 1)*matrix [r][w];
+			}
+			//System.out.println(stdevx + ":" + stdevy);
 		}
 		
 		stdevx = Math.sqrt(stdevx);
 		stdevy = Math.sqrt(stdevy);
-		mean = sum / (256 * 256);
+		mean = 1 / (256 * 256);
 	}
 	
 	private void doIcalculateAutocorrelation(){
+//System.out.println(matrix[20][115] * (-px + 21)*(-px + 21));	
 		for (int r = 0; r < matrix.length; r ++){
 			for (int w = 0; w < matrix[1].length; w ++){
-				
-				result[0] += r * w * matrix[r][w];
+			
+				result[0] += (r + 1) * (w + 1) * matrix[r][w];
 			}
 		}
 	}
@@ -115,21 +140,27 @@ public class GLCMFeatures {
 	}
 
 	private void doIcalculateCorrelation() {
+//System.out.println(px + ":" + py);
+//System.out.println(stdevx + ":" + stdevy);
 		
 		for (int e = 0; e < 256; e ++){
 			for (int f = 0; f < 256; f ++){
-				result[2] +=( (e-px)*(f-py)*matrix [e][f]/(stdevx*stdevy)) ;
+				result[2] +=((e - px + 1) * (f - py + 1) * matrix[e][f]) / (stdevx * stdevy) ;
 			}
-		}	
+		}
+		//result[2] +=(result[0] - px * py) / (stdevx * stdevy) ;
+//System.out.println(result[2]);
 	}
 	
 	private void doIcalculateClusterProminence (){
-		
+//System.out.println(Math.pow((- px - py + 2), 4.0) * matrix[0][0]);
 		for (int r = 0; r < matrix.length; r ++){
 			for (int w = 0; w < matrix[1].length; w ++){
 				
-				result[3] += (r + w - px - py) * (r + w - px - py) * (r + w - px - py) * (r + w - px - py) * matrix[r][w];
+				result[3] += Math.pow((r + w - px - py + 2), 4.0) * matrix[r][w];
+				
 			}
+			//System.out.println(result[3]);
 		}
 	}
 	
@@ -138,7 +169,7 @@ public class GLCMFeatures {
 		for (int r = 0; r < matrix.length; r ++){
 			for (int w = 0; w < matrix[1].length; w ++){
 				
-				result[4] += (r + w - px - py) * (r + w - px - py) * (r + w - px - py) * matrix[r][w];
+				result[4] += Math.pow((r + w - px - py + 2), 3.0) * matrix[r][w];;
 			}
 		}
 	}
@@ -192,16 +223,20 @@ public class GLCMFeatures {
 		for (int r = 0; r < matrix.length; r ++){
 			for (int w = 0; w < matrix[1].length; w ++){
 				
-				result[10] += (w - mean) * (w - mean) * matrix[r][w];
+				result[10] += (r - mean + 1) * (r - mean + 1) * matrix[r][w];
 			}
 		}
+		//System.out.println(result[10]);
 	}
 	
 	private void doIcalculateSumAverage  (){
 		
 		for (int index = 0; index < pxplusy.length ; index++){
-			result[11] += index * pxplusy[index];
+			result[11] += (index + 2) * pxplusy[index];
+			//System.out.println(pxplusy[index]);
 		}
+		
+		//System.out.println(result[11]);
 	}
 
 
@@ -211,9 +246,11 @@ public class GLCMFeatures {
 		for (int a = 0; a < 256; a ++){
 			
 			for (int b = 0; b<256; b ++){
-				result[14] += (matrix[a][b] / ( 1 + (a-b) / 256));
+				result[14] += (matrix[a][b] / ( 1 + Math.abs(a - b) / 256));
 			}
 		}
+		
+		//System.out.println(result[14]);
 	}
 
 

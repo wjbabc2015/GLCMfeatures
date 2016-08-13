@@ -31,6 +31,8 @@ public class mutipleNormalFrame extends JFrame implements ActionListener, ItemLi
 	
 	JTextField distance;
 	
+	String path;
+	
 	
 	boolean isSymetric = false;
 	
@@ -44,7 +46,9 @@ public class mutipleNormalFrame extends JFrame implements ActionListener, ItemLi
 	calculationGLCM glcm4;
 	
 	
-	public mutipleNormalFrame () {
+	public mutipleNormalFrame (String path) {
+		
+		this.path = path;
 		
 		mainFrame = new JPanel(new BorderLayout ());
 		pmemu = new JPanel ();
@@ -157,12 +161,16 @@ public class mutipleNormalFrame extends JFrame implements ActionListener, ItemLi
 			exportFile ef = new exportFile("multiAngle");
 			ef.initiateFile();
 			
-			for (int num = 0; num < 10; num++){
-				elementDis = Integer.parseInt(distance.getText());
+			File loadingFile = new File (path);
+			File[] allFiles = loadingFile.listFiles();
+			
+			for (int num = 0; num < allFiles.length; num++){
 				
-				File loadingFile = new File ("C:/Users/jiabin/Desktop/GLCM_Cal/Image/45deg/camera0/PicA100"+ num +".bmp");
+				File imageFile = allFiles[num];
+				
+				elementDis = Integer.parseInt(distance.getText());
 	
-				loadImage img = new loadImage (loadingFile);
+				loadImage img = new loadImage (imageFile);
 				
 				int[][] matrix = img.getGrayLevelMatrix();
 				
@@ -239,8 +247,9 @@ public class mutipleNormalFrame extends JFrame implements ActionListener, ItemLi
 					System.out.println();
 				}
 */		
+				String outFileName = imageFile.getName();
 				try {
-					ef.fileProcessing(result, "PicA100" + num);
+					ef.fileProcessing(result, outFileName);
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();

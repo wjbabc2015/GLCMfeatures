@@ -37,9 +37,13 @@ public class singleNormalFrame extends JFrame implements ActionListener, ItemLis
 	
 	int elementDis = 1;
 	
+	String path;
 	
 	
-	public singleNormalFrame () {
+	
+	public singleNormalFrame (String path) {
+		
+		this.path = path;
 		
 		mainFrame = new JPanel(new BorderLayout ());
 		pmemu = new JPanel ();
@@ -125,12 +129,15 @@ public class singleNormalFrame extends JFrame implements ActionListener, ItemLis
 			
 			elementDis = Integer.parseInt(distance.getText());
 			
+			File loadingFile = new File (path);
+			File[] allFiles = loadingFile.listFiles();
+			
 //System.out.println(degreeAngle + " " + elementDis + " " + isSymetric + " " + isNormalization);
 			
-			for (int n = 0; n < 10; n++){
-				File loadingFile = new File ("C:/Users/jiabin/Desktop/GLCM_Cal/Image/45deg/camera0/PicA100"+ n +".bmp");
+			for (int n = 0; n < allFiles.length; n++){
+				File imageFile = allFiles[n];
 
-				loadImage img = new loadImage (loadingFile);
+				loadImage img = new loadImage (imageFile);
 				
 				int[][] matrix = img.getGrayLevelMatrix();
 				
@@ -142,8 +149,9 @@ public class singleNormalFrame extends JFrame implements ActionListener, ItemLis
 				
 				double[] result = gf.getResult();
 				
+				String outFileName = imageFile.getName();
 				try {
-					ef.fileProcessing(result, "PicA100" + n);
+					ef.fileProcessing(result, outFileName);
 					ef.outCVS(glcm.getGLCM());
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block

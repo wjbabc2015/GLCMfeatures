@@ -10,7 +10,10 @@ public class userInterface extends JFrame implements ActionListener {
 	 JButton choice1;
 	 JButton choice2;
 	 
+	 JTextField path;
+	 
 	 JLabel title;
+	 JLabel pathTitle;
 	 
 	 JPanel mainUI;
 	 
@@ -28,12 +31,22 @@ public class userInterface extends JFrame implements ActionListener {
 		
 		title =new JLabel ("GLCM Normalization Options: ");
 		title.setFont(new Font("Serif", Font.ITALIC, 20));
+		pathTitle = new JLabel ("PATH:");
+		pathTitle.setFont(new Font("Serif", Font.BOLD, 10));
 		choice1 = new JButton ("Single Angle Normalization");
 		choice2 = new JButton ("Mutiple Angle Normalization");
+		choice1.setPreferredSize(new Dimension(250, 30));
+		choice2.setPreferredSize(new Dimension(250, 30));
+		
+		path = new JTextField ();
+		path.setPreferredSize(new Dimension(150, 30));
+		path.setText("C:/Users/jiabin/Desktop/GLCM_Cal/Image/45deg/camera1");
 		
 		mainUI.add(title);
 		mainUI.add(choice1);
 		mainUI.add(choice2);
+		mainUI.add(pathTitle);
+		mainUI.add(path);
 		
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
@@ -49,12 +62,12 @@ public class userInterface extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		
 		if (e.getSource() == choice1){
-			singleNormalFrame sf = new singleNormalFrame();
+			singleNormalFrame sf = new singleNormalFrame(path.getText());
 			this.dispose();
 		}
 		
 		if (e.getSource() == choice2){
-			mutipleNormalFrame mf = new mutipleNormalFrame();
+			mutipleNormalFrame mf = new mutipleNormalFrame(path.getText());
 			this.dispose();
 		}
 	}

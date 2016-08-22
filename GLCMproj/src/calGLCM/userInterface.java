@@ -40,7 +40,7 @@ public class userInterface extends JFrame implements ActionListener {
 		
 		path = new JTextField ();
 		path.setPreferredSize(new Dimension(150, 30));
-		path.setText("C:/Users/jiabin/Desktop/Diffraction_Image/");
+		path.setText("C:/Users/wangj15/Desktop/Diffraction_Image/");
 		
 		mainUI.add(title);
 		//mainUI.add(choice1);

@@ -337,9 +337,9 @@ public class mutipleNormalFrame extends JFrame implements ActionListener, ItemLi
 			
 			elementDis = Integer.parseInt(distance.getText());
 			
-			runGLCMprocess("p-direction", "P-Direction", elementDis, isSymetric, angle);
+			runGLCMprocess("p-polarizor", "P-Polarizor", elementDis, isSymetric, angle);
 			
-			runGLCMprocess("s-direction", "S-Direction", elementDis, isSymetric, angle);
+			runGLCMprocess("s-polarizor", "S-Polarizor", elementDis, isSymetric, angle);
 					
 		}
 		

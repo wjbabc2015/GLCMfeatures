@@ -38,7 +38,7 @@ public class GLCMFeatures {
 	public GLCMFeatures (double[][] glcm){
 		
 		this.matrix = glcm;
-		result = new double [20];
+		result = new double [17];
 		mulContrast = new double[256][256];
 		mulDissimilarity = new double[256][256];
 		
@@ -55,9 +55,13 @@ public class GLCMFeatures {
 
 		//doNormalization ();
 		initialization();
+		doCalculationFeatures();
 		
 	}
 	
+	/**
+	 * No need for this version
+
 	private void doNormalization () {
 
 		for (double[] eleArray : matrix) {
@@ -74,6 +78,7 @@ public class GLCMFeatures {
 			}
 		}
 	}
+	*/
 	
 	private void initialization (){
 		
@@ -110,7 +115,42 @@ public class GLCMFeatures {
 		mean = 1 / (256 * 256);
 	}
 	
+	/**
+	 * Calculate standard deviation for array
+	 * @param elements
+	 * @return
+	 */
+	private double getStd(double[] elements){
+		
+		double std = 0;
+		
+		int size = elements.length;
+		double mean = 0;
+		
+		for (double ele : elements) {
+			mean  += ele;
+		}
+		
+		mean /= size;
+		
+		double varience = 0;
+		
+		for (double ele: elements) {
+			varience += (ele - mean) * (ele - mean);
+		}
+		
+		std = Math.sqrt(varience / (size - 1));
+		
+		return std;
+	}
+	
+	/**
+	 * Revised algorithm for 17 features based on Dr. Hu's new document
+	 */
 	private void doCalculationFeatures(){
+		
+		result[14] = 255;
+		result[15] = 0;
 		
 		for (int r = 0; r < matrix.length; r++) {
 			
@@ -121,7 +161,6 @@ public class GLCMFeatures {
 				
 				//Correlation and Mean = COR and MEA
 				result[2] += (r + 1 - px) * (c + 1 - py) * matrix[r][c];
-				result[2] /= (stdevx * stdevy);//COR
 				
 				result[16] = px; //MEA
 				
@@ -129,13 +168,32 @@ public class GLCMFeatures {
 				result[3] += Math.pow((r - pAverage), 2.0) * matrix[r][c];
 				
 				//Entropy = ENT
-				result[8] += -matrix[r][c] * Math.log(matrix[r][c]);
+				if (matrix[r][c] != 0)
+					result[8] += -matrix[r][c] * Math.log(matrix[r][c]);
+				
+				//Dissimilarity = DIS
+				result[11] += mulDissimilarity[r][c] * matrix[r][c];
+				
+				//Cluster shade = CLS
+				result[12] += Math.pow((r + c + 2 - 2 * px), 3.0) * matrix[r][c];
+				
+				//Cluster prominence = CLP
+				result[13] += Math.pow((r + c + 2 - 2 * px), 4.0) * matrix[r][c];
+				
+				//MAP
+				result[15] = Math.max(result[15], matrix[r][c]);
+				
+				//MIP
+				result[14] = Math.min(result[14], matrix[r][c]);
 			}
 			
 		}
 		
+		result[2] /= (stdevx * stdevy);//COR
+		
 		for (int pos = 0; pos < pxminusy.length; pos ++) {
 			
+			//System.out.println(pxminusy[pos]);
 			//Contrast = CON
 			result[1] += pxminusy[pos] * pos * pos;
 			
@@ -143,24 +201,37 @@ public class GLCMFeatures {
 			result[4] += pxminusy[pos] / (pos * pos + 1);
 			
 			//Difference Entropy = DEN
-			result[10] += -pxminusy[pos] * Math.log(pxminusy[pos]);
+			if (pxminusy[pos] != 0)
+				result[9] -= pxminusy[pos] * Math.log(pxminusy[pos]);
+			
 		}
+		
+		//Difference Variance
+		result[10] = getStd(pxminusy) / (pxminusy.length - 1);
+		System.out.println(result[10]);
 		
 		for (int pos = 0; pos < pxplusy.length; pos ++) {
 			
+			//System.out.println(result[6]);
+			
 			//Sum Average = SAV
-			result[5] += pos * pxplusy[pos]; //needed further validation
+			result[5] += (pos + 2) * pxplusy[pos]; //needed further validation
 			
 			//Sum Entropy = SEN
-			result[7] += -pxplusy[pos] * Math.log(pxplusy[pos]);
+			if (pxplusy[pos] != 0){
+				result[6] -= pxplusy[pos] * Math.log(pxplusy[pos]);
+			}
 		}
+		//System.out.println(result[6]);
 		
 		for (int index = 0; index < pxplusy.length; index ++){
 			//Sum Variance = SVA
-			result[6] += Math.pow((index - result[7]), 2.0) * pxplusy[index];
+			result[7] += Math.pow((index - result[6] + 2), 2.0) * pxplusy[index];
+			//System.out.println(result[6]);
 		}
 	}
-/*	
+	
+/* The same algorithm with Thai Matlab code	
 	private void doIcalculateAutocorrelation(){
 //System.out.println(matrix[20][115] * (-px + 21)*(-px + 21));	
 		for (int r = 0; r < matrix.length; r ++){

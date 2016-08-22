@@ -121,9 +121,9 @@ public class singleNormalFrame extends JFrame implements ActionListener, ItemLis
 		
 		if (e.getSource() == run){
 			
-			exportFile ef = new exportFile ("singleResult");
+			exportFile ef = new exportFile ("singleResult", path);
 			
-			ef.initiateFile();
+			ef.initiateFile("singleResult");
 			
 			degreeAngle = degree.getSelectedItem().toString();
 			

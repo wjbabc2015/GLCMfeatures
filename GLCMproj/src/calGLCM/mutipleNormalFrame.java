@@ -7,6 +7,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.swing.*;
 
@@ -51,8 +52,8 @@ public class mutipleNormalFrame extends JFrame implements ActionListener, ItemLi
 		this.path = path;
 		
 		mainFrame = new JPanel(new BorderLayout ());
-		pmemu = new JPanel ();
-		pbutton = new JPanel ();
+		pmemu = new JPanel();
+		pbutton = new JPanel();
 		checkBox = new JPanel();
 		degreeBox = new JPanel();
 		distanceBox = new JPanel();
@@ -152,112 +153,194 @@ public class mutipleNormalFrame extends JFrame implements ActionListener, ItemLi
 		}
 		return matrix;
 	}
+	
+	private void runGLCMprocess (String folderName, String resultName, int dis, boolean sym, boolean[] subangle){
+		
+		File loadingFile = new File (path + folderName);
+		File[] allFiles = loadingFile.listFiles();
+		
+		ArrayList<double[]> hfeatures = new ArrayList<double[]>();
+		ArrayList<double[]> vfeatures = new ArrayList<double[]>();
+		ArrayList<double[]> diafeatures = new ArrayList<double[]>();
+		ArrayList<double[]> andiafeatures = new ArrayList<double[]>();
+		ArrayList<double[]> averfeatures = new ArrayList<double[]>();
+		ArrayList<String> imageName = new ArrayList<String>();
+		
+		for (int num = 0; num < allFiles.length; num++){
+			
+			double[] hresult = null;
+			double[] vresult = null;
+			double[] dresult = null;
+			double[] aresult = null;
+			
+			File imageFile = allFiles[num];
+
+			loadImage img = new loadImage (imageFile);
+			
+			String outFileName = imageFile.getName();
+			
+			imageName.add(outFileName);
+			
+			int[][] matrix = img.getGrayLevelMatrix();
+			
+			//ef.outCVS(matrix);
+			
+			double[][] glcm = new double[256][256];
+			int count = 0;
+			
+			if (subangle[0]){
+				glcm1 = new calculationGLCM (matrix, "0", dis, sym, true);
+				
+				//glcm = mergeMatrix(glcm, glcm1.getGLCM()); //used for Thai's matlab code
+				
+				GLCMFeatures hgf = new GLCMFeatures (glcm1.getGLCM());
+				
+				hresult = hgf.getResult();
+				
+				hfeatures.add(hresult);
+				
+				count ++;
+			}
+			
+			if (subangle[1]){
+				glcm2 = new calculationGLCM (matrix, "45", dis, sym, true);
+				
+				//glcm = mergeMatrix(glcm, glcm2.getGLCM());
+				
+				GLCMFeatures vgf = new GLCMFeatures (glcm2.getGLCM());
+				
+				vresult = vgf.getResult();
+				
+				vfeatures.add(vresult);
+				count ++;
+			}
+			
+			if (subangle[2]){
+				glcm3 = new calculationGLCM (matrix, "90", dis, sym, true);
+				
+				//glcm = mergeMatrix(glcm, glcm3.getGLCM());
+				
+				GLCMFeatures dgf = new GLCMFeatures (glcm3.getGLCM());
+				
+				dresult = dgf.getResult();
+				
+				diafeatures.add(dresult);
+				count ++;
+			}
+			
+			if (subangle[3]){
+				glcm4 = new calculationGLCM (matrix, "135", dis, sym, true);
+				
+				//glcm = mergeMatrix(glcm, glcm4.getGLCM());
+				
+				GLCMFeatures agf = new GLCMFeatures (glcm4.getGLCM());
+				
+				aresult = agf.getResult();
+				
+				andiafeatures.add(aresult);
+				count ++;
+			}
+			
+			//glcm = matrixNormalization (glcm, count);
+			
+			//ef.outCVS(glcm);
+
+//System.out.println(count + " " + elementDis + " " + isSymetric + " " + angle[0] + " " + angle[1] + " " + angle[2] + " " + angle[3]);
+/*			
+			for (int r = 0; r < 256; r ++){
+				for (int c = 0; c < 256; c ++){
+					glcm[r][c] /= count;
+				}
+			}
+*/			double[] result = new double[aresult.length];
+
+			for (int r = 0; r < result.length; r ++) {
+				result[r] = (hresult[r] + vresult[r] + dresult[r] + aresult[r]) / count;
+			}
+			
+			averfeatures.add(result);
+
+			/*				
+			System.out.println("Autocorrelation: " + result[0]);
+			System.out.println("Contrast: " + result[1]);
+			System.out.println("Correlation: " + result[2]);
+			System.out.println("Cluster Prominence: " + result[3]);
+			System.out.println("Cluster Shade: " + result[4]);
+			System.out.println("Dissimilarity: " + result[5]);
+			System.out.println("Energy: " + result[6]);
+			System.out.println("Entropy: " + result[7]);
+			System.out.println("Homogeneity: " + result[8]);
+			System.out.println("Maximum Probability: " + result[9]);
+			System.out.println("Variance: " + result[10]);
+			System.out.println("Sum Average: " + result[11]);
+			System.out.println("Sum Entropy: " + result[12]);
+			System.out.println("Difference Entropy: " + result[13]);
+			System.out.println("IDM: " + result[14]);
+			
+				
+			for (int a = 0; a < 256 ;a ++ ) {
+				for (int b= 0; b< 256 ; b ++ ) {
+					System.out.print(glcm[a][b] + " ");
+				}
+				System.out.println();
+			}
+*/		
+		}
+		
+		exportFile ef = new exportFile (resultName, path);
+		int pos = 0;
+		
+		ef.initiateFile("Horizontal Result");
+
+		try {
+			for(double[] array: hfeatures){
+				ef.fileProcessing(array, imageName.get(pos));
+			}
+			
+			ef.printTitle("Vertical Result");
+			pos = 0;
+			
+			for(double[] array: vfeatures){
+				ef.fileProcessing(array, imageName.get(pos));
+			}
+			
+			ef.printTitle("Diagram Result");
+			pos = 0;
+			
+			for(double[] array: diafeatures){
+				ef.fileProcessing(array, imageName.get(pos));
+			}
+			
+			ef.printTitle("AntiDiagram Result");
+			pos = 0;
+			
+			for(double[] array: vfeatures){
+				ef.fileProcessing(array, imageName.get(pos));
+			}
+			
+			ef.printTitle("Average Result");
+			pos = 0;
+			
+			for(double[] array: averfeatures){
+				ef.fileProcessing(array, imageName.get(pos));
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		
 		if (e.getSource() == run){
 			
-			exportFile ef = new exportFile("multiAngle");
-			ef.initiateFile();
+			elementDis = Integer.parseInt(distance.getText());
 			
-			File loadingFile = new File (path);
-			File[] allFiles = loadingFile.listFiles();
+			runGLCMprocess("p-direction", "P-Direction", elementDis, isSymetric, angle);
 			
-			for (int num = 0; num < allFiles.length; num++){
-				
-				File imageFile = allFiles[num];
-				
-				elementDis = Integer.parseInt(distance.getText());
-	
-				loadImage img = new loadImage (imageFile);
-				
-				int[][] matrix = img.getGrayLevelMatrix();
-				
-				double[][] glcm = new double[256][256];
-				int count = 0;
-				
-				if (angle[0]){
-					glcm1 = new calculationGLCM (matrix, "0", elementDis, isSymetric, false);
+			runGLCMprocess("s-direction", "S-Direction", elementDis, isSymetric, angle);
 					
-					glcm = mergeMatrix(glcm, glcm1.getGLCM());
-					count ++;
-				}
-				
-				if (angle[1]){
-					glcm2 = new calculationGLCM (matrix, "45", elementDis, isSymetric, false);
-					
-					glcm = mergeMatrix(glcm, glcm2.getGLCM());
-					count ++;
-				}
-				
-				if (angle[2]){
-					glcm3 = new calculationGLCM (matrix, "90", elementDis, isSymetric, false);
-					
-					glcm = mergeMatrix(glcm, glcm3.getGLCM());
-					count ++;
-				}
-				
-				if (angle[3]){
-					glcm4 = new calculationGLCM (matrix, "135", elementDis, isSymetric, false);
-					
-					glcm = mergeMatrix(glcm, glcm4.getGLCM());
-					count ++;
-				}
-				
-				glcm = matrixNormalization (glcm, count);
-				
-				//ef.outCVS(glcm);
-	
-	//System.out.println(count + " " + elementDis + " " + isSymetric + " " + angle[0] + " " + angle[1] + " " + angle[2] + " " + angle[3]);
-	/*			
-				for (int r = 0; r < 256; r ++){
-					for (int c = 0; c < 256; c ++){
-						glcm[r][c] /= count;
-					}
-				}
-	*/			
-				
-				GLCMFeatures gf = new GLCMFeatures (glcm);
-				
-				double[] result = gf.getResult();
-
-				/*				
-				System.out.println("Autocorrelation: " + result[0]);
-				System.out.println("Contrast: " + result[1]);
-				System.out.println("Correlation: " + result[2]);
-				System.out.println("Cluster Prominence: " + result[3]);
-				System.out.println("Cluster Shade: " + result[4]);
-				System.out.println("Dissimilarity: " + result[5]);
-				System.out.println("Energy: " + result[6]);
-				System.out.println("Entropy: " + result[7]);
-				System.out.println("Homogeneity: " + result[8]);
-				System.out.println("Maximum Probability: " + result[9]);
-				System.out.println("Variance: " + result[10]);
-				System.out.println("Sum Average: " + result[11]);
-				System.out.println("Sum Entropy: " + result[12]);
-				System.out.println("Difference Entropy: " + result[13]);
-				System.out.println("IDM: " + result[14]);
-				
-					
-				for (int a = 0; a < 256 ;a ++ ) {
-					for (int b= 0; b< 256 ; b ++ ) {
-						System.out.print(glcm[a][b] + " ");
-					}
-					System.out.println();
-				}
-*/		
-				String outFileName = imageFile.getName();
-				try {
-					ef.fileProcessing(result, outFileName);
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			
-			}
-			
-			
 		}
 		
 		if (e.getSource() == back){

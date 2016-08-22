@@ -9,6 +9,8 @@ public class GLCMFeatures {
 	double[][] mulContrast;
 	double[][] mulDissimilarity;
 	
+	double pAverage=0;
+	
 	double px=0;
 	double py=0;
 	double stdevx=0.0;
@@ -36,7 +38,7 @@ public class GLCMFeatures {
 	public GLCMFeatures (double[][] glcm){
 		
 		this.matrix = glcm;
-		result = new double [15];
+		result = new double [20];
 		mulContrast = new double[256][256];
 		mulDissimilarity = new double[256][256];
 		
@@ -51,21 +53,8 @@ public class GLCMFeatures {
 			System.out.println();
 		}*/
 
-		doNormalization ();
+		//doNormalization ();
 		initialization();
-		doIcalculateAutocorrelation();
-		doIcalculateContrast ();
-		doIcalculateCorrelation ();
-		doIcalculateClusterProminence();
-		doIcalculateClusterShade();
-		doIcalculateDissimilarity();
-		doIcalculateEnergy();
-		doIcalculateHomogeneity();
-		doIcalculateMaximumProbability();
-		doIcalculateVariance();
-		doIcalculateSumAverage();
-		doIcalculateIDM ();
-		doIcalculateEntropy ();
 		
 	}
 	
@@ -94,6 +83,9 @@ public class GLCMFeatures {
 				mulContrast[r][w] += (r - w) * (r - w);
 				mulDissimilarity[r][w] += Math.abs(r - w);
 				
+				pAverage += r * matrix[r][w];
+				
+				
 				px += (r + 1) * matrix[r][w];
 				py += (w + 1) * matrix[r][w];
 				
@@ -107,8 +99,8 @@ public class GLCMFeatures {
 			for (int w = 0; w < matrix[r].length; w++){
 				
 //System.out.println(stdevx);
-				stdevx=stdevx+(r-px + 1)*(r-px + 1)*matrix [r][w];
-				stdevy=stdevy+(w-py + 1)*(w-py + 1)*matrix [r][w];
+				stdevx=stdevx+(r+1-px)*(r+1-px)*matrix [r][w];
+				stdevy=stdevy+(w+1-py)*(w+1-py)*matrix [r][w];
 			}
 			//System.out.println(stdevx + ":" + stdevy);
 		}
@@ -118,6 +110,57 @@ public class GLCMFeatures {
 		mean = 1 / (256 * 256);
 	}
 	
+	private void doCalculationFeatures(){
+		
+		for (int r = 0; r < matrix.length; r++) {
+			
+			for (int c = 0; c < matrix[r].length; c++){
+				
+				//energy or Angular Second Moment = ASM
+				result[0] += matrix[r][c] * matrix[r][c];
+				
+				//Correlation and Mean = COR and MEA
+				result[2] += (r + 1 - px) * (c + 1 - py) * matrix[r][c];
+				result[2] /= (stdevx * stdevy);//COR
+				
+				result[16] = px; //MEA
+				
+				//Variance (Sum of Squares) = VAR
+				result[3] += Math.pow((r - pAverage), 2.0) * matrix[r][c];
+				
+				//Entropy = ENT
+				result[8] += -matrix[r][c] * Math.log(matrix[r][c]);
+			}
+			
+		}
+		
+		for (int pos = 0; pos < pxminusy.length; pos ++) {
+			
+			//Contrast = CON
+			result[1] += pxminusy[pos] * pos * pos;
+			
+			//Inverse Difference Moment = IDM
+			result[4] += pxminusy[pos] / (pos * pos + 1);
+			
+			//Difference Entropy = DEN
+			result[10] += -pxminusy[pos] * Math.log(pxminusy[pos]);
+		}
+		
+		for (int pos = 0; pos < pxplusy.length; pos ++) {
+			
+			//Sum Average = SAV
+			result[5] += pos * pxplusy[pos]; //needed further validation
+			
+			//Sum Entropy = SEN
+			result[7] += -pxplusy[pos] * Math.log(pxplusy[pos]);
+		}
+		
+		for (int index = 0; index < pxplusy.length; index ++){
+			//Sum Variance = SVA
+			result[6] += Math.pow((index - result[7]), 2.0) * pxplusy[index];
+		}
+	}
+/*	
 	private void doIcalculateAutocorrelation(){
 //System.out.println(matrix[20][115] * (-px + 21)*(-px + 21));	
 		for (int r = 0; r < matrix.length; r ++){
@@ -145,7 +188,7 @@ public class GLCMFeatures {
 		
 		for (int e = 0; e < 256; e ++){
 			for (int f = 0; f < 256; f ++){
-				result[2] +=((e - px + 1) * (f - py + 1) * matrix[e][f]) / (stdevx * stdevy) ;
+				result[2] +=((e - px) * (f - py) * matrix[e][f]) / (stdevx * stdevy) ;
 			}
 		}
 		//result[2] +=(result[0] - px * py) / (stdevx * stdevy) ;
@@ -157,7 +200,7 @@ public class GLCMFeatures {
 		for (int r = 0; r < matrix.length; r ++){
 			for (int w = 0; w < matrix[1].length; w ++){
 				
-				result[3] += Math.pow((r + w - px - py + 2), 4.0) * matrix[r][w];
+				result[3] += Math.pow((r + w - px - py), 4.0) * matrix[r][w];
 				
 			}
 			//System.out.println(result[3]);
@@ -276,7 +319,7 @@ public class GLCMFeatures {
 			result[13] +=  -(pxminusy[index]*(Math.log(pxminusy[index] + 2.2204e-16)));
 		}
 	}
-	
+*/
 	public double[] getResult(){
 		return result;
 	}

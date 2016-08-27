@@ -123,7 +123,7 @@ public class singleNormalFrame extends JFrame implements ActionListener, ItemLis
 			
 			exportFile ef = new exportFile ("singleResult", path);
 			
-			ef.initiateFile("singleResult");
+			ef.initiateFile();
 			
 			degreeAngle = degree.getSelectedItem().toString();
 			
@@ -180,7 +180,7 @@ public class singleNormalFrame extends JFrame implements ActionListener, ItemLis
 		}
 		
 		if (e.getSource() == back){
-			userInterface mf = new userInterface();
+			userInterface mf = new userInterface(path);
 			this.dispose();
 		}
 	}

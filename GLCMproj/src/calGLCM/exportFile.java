@@ -14,15 +14,13 @@ public class exportFile {
 	
 	public exportFile(){}
 	
-	public void initiateFile (String title) {
+	public void initiateFile () {
 		PrintWriter pw = null;
 		try {
 			pw = new PrintWriter (new File(path + fileName + ".csv"));
 			
 			StringBuilder sb = new StringBuilder ();
 			
-			sb.append(title);
-			sb.append('\n');
 			sb.append("Pic\\Features");
 			sb.append(",");
 			sb.append("ASM");
@@ -69,63 +67,6 @@ public class exportFile {
 			if (pw != null) pw.close();
 		}
 		
-	}
-	
-	public void printTitle (String title) throws IOException{
-		PrintWriter pw = null;
-		try {
-			pw = new PrintWriter(new FileWriter(path + fileName + ".csv", true));
-			
-			StringBuilder sb = new StringBuilder ();
-
-			sb.append('\n');
-			sb.append(title);
-			sb.append('\n');
-			sb.append("Pic\\Features");
-			sb.append(",");
-			sb.append("ASM");
-			sb.append(',');
-			sb.append("CON");
-			sb.append(',');
-			sb.append("COR");
-			sb.append(',');
-			sb.append("VAR");
-			sb.append(',');
-			sb.append("IDM");
-			sb.append(",");
-			sb.append("SAV");
-			sb.append(',');
-			sb.append("SEN");
-			sb.append(',');
-			sb.append("SVA");
-			sb.append(',');
-			sb.append("ENT");
-			sb.append(',');
-			sb.append("DEN");
-			sb.append(",");
-			sb.append("DVA");
-			sb.append(',');
-			sb.append("DIS");
-			sb.append(',');
-			sb.append("CLS");
-			sb.append(',');
-			sb.append("CLP");
-			sb.append(',');
-			sb.append("MIP");
-			sb.append(',');
-			sb.append("MAP");
-			sb.append(',');
-			sb.append("MEA");
-			sb.append('\n');
-			
-			pw.write(sb.toString());
-			
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}finally {
-			if (pw != null) pw.close();
-		}
 	}
 	
 	public void fileProcessing (double[] result, String nameTitle) throws IOException{

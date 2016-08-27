@@ -19,6 +19,7 @@ public class mutipleNormalFrame extends JFrame implements ActionListener, ItemLi
 	JPanel degreeBox;
 	JPanel checkBox;
 	JPanel distanceBox;
+	JPanel printOption;
 	
 	JButton run;
 	JButton back;
@@ -27,6 +28,11 @@ public class mutipleNormalFrame extends JFrame implements ActionListener, ItemLi
 	JCheckBox upRight;
 	JCheckBox up;
 	JCheckBox upLeft;
+	
+	JCheckBox printRight;
+	JCheckBox printUpRight;
+	JCheckBox printUp;
+	JCheckBox printUpLeft;
 	
 	JCheckBox symetric;
 	
@@ -38,6 +44,7 @@ public class mutipleNormalFrame extends JFrame implements ActionListener, ItemLi
 	boolean isSymetric = false;
 	
 	boolean[] angle = new boolean[4];
+	boolean[] options = new boolean[4];
 	
 	int elementDis = 1;
 	
@@ -57,21 +64,26 @@ public class mutipleNormalFrame extends JFrame implements ActionListener, ItemLi
 		checkBox = new JPanel();
 		degreeBox = new JPanel();
 		distanceBox = new JPanel();
+		printOption = new JPanel();
 		
 		for (int i = 0; i < angle.length; i++) {
 			angle[i] = false;
+			options[i] = false;
 		}
 		
-		pmemu.setLayout(new GridLayout(4, 1));
+		pmemu.setLayout(new GridLayout(6, 1));
 		checkBox.setLayout(new GridLayout(1, 2));
 		degreeBox.setLayout(new GridLayout(1, 4));
 		distanceBox.setLayout(new GridLayout(1, 2));
+		printOption.setLayout(new GridLayout(1, 4));
 		
 		
 		JLabel title = new JLabel ("Mutiple Angle process", JLabel.CENTER);
 		JLabel separate = new JLabel ("Select the angle for Normalization: ", JLabel.LEFT);
 		JLabel notification = new JLabel ("Select GLCM Mode: ", JLabel.LEFT);
 		title.setFont(new Font("Serif", Font.ITALIC, 30));
+		
+		JLabel separatePrint = new JLabel ("Options for features print: ", JLabel.LEFT);
 		
 		JLabel distanceLab = new JLabel ("Distance: ");
 		
@@ -87,10 +99,18 @@ public class mutipleNormalFrame extends JFrame implements ActionListener, ItemLi
 		up = new JCheckBox ("90");
 		upLeft = new JCheckBox ("135");
 		
+		printRight = new JCheckBox ("0");
+		printUpRight = new JCheckBox ("45");
+		printUp = new JCheckBox ("90");
+		printUpLeft = new JCheckBox ("135");
+		
 		pmemu.add(distanceBox);
 		pmemu.add(separate);
 		pmemu.add(degreeBox);
 		pmemu.add(checkBox);
+		pmemu.add(separatePrint);
+		pmemu.add(printOption);
+		
 		
 		checkBox.add(notification);
 		checkBox.add(symetric);
@@ -101,6 +121,11 @@ public class mutipleNormalFrame extends JFrame implements ActionListener, ItemLi
 		degreeBox.add(upRight);
 		degreeBox.add(up);
 		degreeBox.add(upLeft);
+		
+		printOption.add(printRight);
+		printOption.add(printUpRight);
+		printOption.add(printUp);
+		printOption.add(printUpLeft);
 		
 		pbutton.add(back);
 		pbutton.add(run);
@@ -130,6 +155,11 @@ public class mutipleNormalFrame extends JFrame implements ActionListener, ItemLi
 		up.addItemListener(this);
 		upLeft.addItemListener(this);
 		
+		printRight.addItemListener(this);
+		printUpRight.addItemListener(this);
+		printUp.addItemListener(this);
+		printUpLeft.addItemListener(this);
+		
 	}
 	
 	private double[][] mergeMatrix (double[][] mainMatrix, double[][] addMatrix){
@@ -154,7 +184,7 @@ public class mutipleNormalFrame extends JFrame implements ActionListener, ItemLi
 		return matrix;
 	}
 	
-	private void runGLCMprocess (String folderName, String resultName, int dis, boolean sym, boolean[] subangle){
+	private void runGLCMprocess (String folderName, String resultName, int dis, boolean sym, boolean[] subangle, boolean[] suboption){
 		
 		File loadingFile = new File (path + folderName);
 		File[] allFiles = loadingFile.listFiles();
@@ -287,42 +317,70 @@ public class mutipleNormalFrame extends JFrame implements ActionListener, ItemLi
 */		
 		}
 		
-		exportFile ef = new exportFile (resultName, path);
-		int pos = 0;
 		
-		ef.initiateFile("Horizontal Result");
+		int pos = 0;
 
 		try {
-			for(double[] array: hfeatures){
-				ef.fileProcessing(array, imageName.get(pos));
+			
+			if (suboption[0]){
+				exportFile efh = new exportFile (resultName + " - 0 deg", path);
+				efh.initiateFile();
+				for(double[] array: hfeatures){
+					efh.fileProcessing(array, imageName.get(pos));
+					pos++;
+				}
+				
+				pos = 0;
 			}
 			
-			ef.printTitle("Vertical Result");
-			pos = 0;
-			
-			for(double[] array: vfeatures){
-				ef.fileProcessing(array, imageName.get(pos));
+			if (suboption[1]){
+				exportFile efd = new exportFile (resultName + " - 45 deg", path);
+				efd.initiateFile();
+				
+				for(double[] array: diafeatures){
+
+					efd.fileProcessing(array, imageName.get(pos));
+					pos++;
+				}
+				
+				pos = 0;
 			}
 			
-			ef.printTitle("Diagram Result");
-			pos = 0;
-			
-			for(double[] array: diafeatures){
-				ef.fileProcessing(array, imageName.get(pos));
+			if (suboption[2]){
+				exportFile efv = new exportFile (resultName + " - 90 deg", path);
+				efv.initiateFile();
+				
+				for(double[] array: vfeatures){
+					efv.fileProcessing(array, imageName.get(pos));
+					pos++;
+				}
+				
+				pos = 0;
 			}
 			
-			ef.printTitle("AntiDiagram Result");
-			pos = 0;
-			
-			for(double[] array: vfeatures){
-				ef.fileProcessing(array, imageName.get(pos));
+			if (suboption[3]){
+				exportFile efa = new exportFile (resultName + " - 135 deg", path);
+				efa.initiateFile();
+				
+				for(double[] array: andiafeatures){
+
+					efa.fileProcessing(array, imageName.get(pos));
+					pos++;
+				}
+				
+				pos = 0;
 			}
 			
-			ef.printTitle("Average Result");
-			pos = 0;
+			
+			
+			
+			exportFile efav = new exportFile (resultName + " - Average", path);
+			efav.initiateFile();
 			
 			for(double[] array: averfeatures){
-				ef.fileProcessing(array, imageName.get(pos));
+
+				efav.fileProcessing(array, imageName.get(pos));
+				pos++;
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -335,16 +393,23 @@ public class mutipleNormalFrame extends JFrame implements ActionListener, ItemLi
 		
 		if (e.getSource() == run){
 			
+			long startTime = System.currentTimeMillis();
+			
 			elementDis = Integer.parseInt(distance.getText());
 			
-			runGLCMprocess("p-polarizor", "P-Polarizor", elementDis, isSymetric, angle);
+			runGLCMprocess("p-polarizor", "P-Polarizor", elementDis, isSymetric, angle, options);
 			
-			runGLCMprocess("s-polarizor", "S-Polarizor", elementDis, isSymetric, angle);
+			runGLCMprocess("s-polarizor", "S-Polarizor", elementDis, isSymetric, angle, options);
+			
+			long endTime   = System.currentTimeMillis();
+			long totalTime = endTime - startTime;
+			
+			JOptionPane.showMessageDialog(null, "Calculation completed, time consuming: " + totalTime + " ms!", null, JOptionPane.INFORMATION_MESSAGE);
 					
 		}
 		
 		if (e.getSource() == back){
-			userInterface mf = new userInterface();
+			userInterface mf = new userInterface(path);
 			this.dispose();
 		}
 	}
@@ -370,6 +435,22 @@ public class mutipleNormalFrame extends JFrame implements ActionListener, ItemLi
 		
 		if (i.getItemSelectable() == upLeft){
 			angle[3] = !angle[3];
+		}
+		
+		if (i.getItemSelectable() == printRight){
+			options[0] = !options[0];
+		}
+		
+		if (i.getItemSelectable() == printUpRight){
+			options[1] = !options[1];
+		}
+		
+		if (i.getItemSelectable() == printUp){
+			options[2] = !options[2];
+		}
+		
+		if (i.getItemSelectable() == printUpLeft){
+			options[3] = !options[3];
 		}
 		
 	}

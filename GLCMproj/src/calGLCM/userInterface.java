@@ -17,8 +17,12 @@ public class userInterface extends JFrame implements ActionListener {
 	 
 	 JPanel mainUI;
 	 
+	 String pathName;
+	 
 	
-	public userInterface (){
+	public userInterface (String name){
+		
+		this.pathName = name;
 		
 		mainUI = new JPanel ();
 		
@@ -40,7 +44,7 @@ public class userInterface extends JFrame implements ActionListener {
 		
 		path = new JTextField ();
 		path.setPreferredSize(new Dimension(150, 30));
-		path.setText("C:/Users/wangj15/Desktop/Diffraction_Image/");
+		path.setText(pathName);
 		
 		mainUI.add(title);
 		//mainUI.add(choice1);
@@ -74,7 +78,7 @@ public class userInterface extends JFrame implements ActionListener {
 	
 	public static void main(String[] args) {
 		
-		userInterface ui = new userInterface();
+		userInterface ui = new userInterface("C:/Users/wangj15/Desktop/Diffraction_Image/");
 	}
 
 }

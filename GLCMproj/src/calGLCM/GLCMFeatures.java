@@ -208,7 +208,7 @@ public class GLCMFeatures {
 		
 		//Difference Variance
 		result[10] = getStd(pxminusy) / (pxminusy.length - 1);
-		System.out.println(result[10]);
+		//System.out.println(result[10]);
 		
 		for (int pos = 0; pos < pxplusy.length; pos ++) {
 			

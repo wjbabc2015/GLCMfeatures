@@ -49,10 +49,13 @@ public class loadImage {
 		int width = raster.getWidth();
 		
 		int[][] result = new int[height][width];
+		int[][] testResult = new int[image.getHeight()][image.getWidth()];
 		
 		for (int h =0; h < height; h++){
 			for (int w = 0; w < width; w ++){
-				Color c = new Color (image.getRGB(w, h));
+				//Color c = new Color (image.getRGB(w, h));
+				
+				//testResult[h][w] = c.getBlue();
 				
 				//int rgbValue = (c.getRed() + c.getGreen() + c.getBlue()) / 3;
 						
@@ -60,8 +63,11 @@ public class loadImage {
 				//result[h][w] = (int) (0.000004 * rgbValue * rgbValue * rgbValue + 0.003 * rgbValue * rgbValue - 0.033 * rgbValue + 1.8897);
 				result[h][w] = raster.getSample(w, h, 0);
 			}
+			
+			//int diff = result[h][40] - testResult[h][40];
+			//System.out.println(result[h][40] + " - " + testResult[h][40] + " = " + diff);
 		}
-		
+		//System.out.println(new Color(image.getRGB(20, 40)).getColorSpace().getType());
 		return result;
 	}
 	
@@ -218,6 +224,7 @@ System.out.println(bpalette[14]);
 	public static void main(String[] args) {
 		
 		File loadingFile = new File ("C:/Users/jiabin/Desktop/GLCM_Cal/Image/45deg/camera0/PicA1009.bmp");
+		//File loadingFile = new File ("C:/Users/jiabin/Desktop/Zhen Bi/5.tiff");
 		
 		loadImage lI = new loadImage (loadingFile);
 		
@@ -240,7 +247,7 @@ System.out.println(bpalette[14]);
 		loadImage lI = new loadImage();
 		Image i = lI.loadbitmap("C:/Users/jiabin/Desktop/GLCM_Cal/Image/45deg/camera0/", "PicA1009.bmp");*/
 		
-		exportFile ef = new exportFile();
-		ef.outCVS (tempResult);
+		//exportFile ef = new exportFile();
+		//ef.outCVS (tempResult);
 	}
 }

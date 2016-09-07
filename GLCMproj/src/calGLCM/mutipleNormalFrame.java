@@ -196,6 +196,8 @@ public class mutipleNormalFrame extends JFrame implements ActionListener, ItemLi
 		ArrayList<double[]> averfeatures = new ArrayList<double[]>();
 		ArrayList<String> imageName = new ArrayList<String>();
 		
+		String outFileName = "";
+		
 		for (int num = 0; num < allFiles.length; num++){
 			
 			double[] hresult = null;
@@ -207,9 +209,13 @@ public class mutipleNormalFrame extends JFrame implements ActionListener, ItemLi
 
 			loadImage img = new loadImage (imageFile);
 			
-			String outFileName = imageFile.getName();
+			String currentFileName = imageFile.getName().substring(0, imageFile.getName().indexOf('-'));
 			
-			imageName.add(outFileName);
+			if (currentFileName != outFileName){
+				
+				outFileName = currentFileName;
+				imageName.add(outFileName);
+			}
 			
 			int[][] matrix = img.getGrayLevelMatrix();
 			
@@ -399,7 +405,7 @@ public class mutipleNormalFrame extends JFrame implements ActionListener, ItemLi
 			
 			runGLCMprocess("p-polarizor", "P-Polarizor", elementDis, isSymetric, angle, options);
 			
-			runGLCMprocess("s-polarizor", "S-Polarizor", elementDis, isSymetric, angle, options);
+			//runGLCMprocess("s-polarizor", "S-Polarizor", elementDis, isSymetric, angle, options);
 			
 			long endTime   = System.currentTimeMillis();
 			long totalTime = endTime - startTime;

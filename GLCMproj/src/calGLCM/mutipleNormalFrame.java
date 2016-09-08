@@ -189,11 +189,18 @@ public class mutipleNormalFrame extends JFrame implements ActionListener, ItemLi
 		File loadingFile = new File (path + folderName);
 		File[] allFiles = loadingFile.listFiles();
 		
-		ArrayList<double[]> hfeatures = new ArrayList<double[]>();
-		ArrayList<double[]> vfeatures = new ArrayList<double[]>();
-		ArrayList<double[]> diafeatures = new ArrayList<double[]>();
-		ArrayList<double[]> andiafeatures = new ArrayList<double[]>();
-		ArrayList<double[]> averfeatures = new ArrayList<double[]>();
+		ArrayList<double[]> hfeatures1 = new ArrayList<double[]>();
+		ArrayList<double[]> vfeatures1 = new ArrayList<double[]>();
+		ArrayList<double[]> diafeatures1 = new ArrayList<double[]>();
+		ArrayList<double[]> andiafeatures1 = new ArrayList<double[]>();
+		ArrayList<double[]> averfeatures1 = new ArrayList<double[]>();
+		
+		ArrayList<double[]> hfeatures2 = new ArrayList<double[]>();
+		ArrayList<double[]> vfeatures2 = new ArrayList<double[]>();
+		ArrayList<double[]> diafeatures2 = new ArrayList<double[]>();
+		ArrayList<double[]> andiafeatures2 = new ArrayList<double[]>();
+		ArrayList<double[]> averfeatures2 = new ArrayList<double[]>();
+		
 		ArrayList<String> imageName = new ArrayList<String>();
 		
 		String outFileName = "";
@@ -209,12 +216,18 @@ public class mutipleNormalFrame extends JFrame implements ActionListener, ItemLi
 
 			loadImage img = new loadImage (imageFile);
 			
-			String currentFileName = imageFile.getName().substring(0, imageFile.getName().indexOf('-'));
+			String currentFileName = imageFile.getName().substring(0, imageFile.getName().indexOf('-')) + "-" +
+									imageFile.getName().substring(imageFile.getName().indexOf('.'));
 			
-			if (currentFileName != outFileName){
+			int tag = Integer.parseInt(imageFile.getName().substring(imageFile.getName().indexOf('-') + 1, imageFile.getName().indexOf('-') + 2));
+			
+			//System.out.println(currentFileName);
+			
+			if ( !outFileName.equals(currentFileName)){
 				
 				outFileName = currentFileName;
 				imageName.add(outFileName);
+				//System.out.println(outFileName);
 			}
 			
 			int[][] matrix = img.getGrayLevelMatrix();
@@ -233,7 +246,11 @@ public class mutipleNormalFrame extends JFrame implements ActionListener, ItemLi
 				
 				hresult = hgf.getResult();
 				
-				hfeatures.add(hresult);
+				if (tag == 1){
+					hfeatures1.add(hresult);
+				}else {
+					hfeatures2.add(hresult);
+				}
 				
 				count ++;
 			}
@@ -247,7 +264,12 @@ public class mutipleNormalFrame extends JFrame implements ActionListener, ItemLi
 				
 				vresult = vgf.getResult();
 				
-				vfeatures.add(vresult);
+				if (tag == 1){
+					vfeatures1.add(vresult);
+				}else {
+					vfeatures2.add(vresult);
+				}
+				
 				count ++;
 			}
 			
@@ -260,7 +282,12 @@ public class mutipleNormalFrame extends JFrame implements ActionListener, ItemLi
 				
 				dresult = dgf.getResult();
 				
-				diafeatures.add(dresult);
+				if (tag == 1){
+					diafeatures1.add(dresult);
+				}else{
+					diafeatures2.add(dresult);
+				}
+				
 				count ++;
 			}
 			
@@ -273,7 +300,12 @@ public class mutipleNormalFrame extends JFrame implements ActionListener, ItemLi
 				
 				aresult = agf.getResult();
 				
-				andiafeatures.add(aresult);
+				if (tag == 1){
+					andiafeatures1.add(aresult);
+				}else {
+					andiafeatures2.add(aresult);
+				}
+				
 				count ++;
 			}
 			
@@ -294,7 +326,11 @@ public class mutipleNormalFrame extends JFrame implements ActionListener, ItemLi
 				result[r] = (hresult[r] + vresult[r] + dresult[r] + aresult[r]) / count;
 			}
 			
-			averfeatures.add(result);
+			if (tag == 1){
+				averfeatures1.add(result);
+			}else {
+				averfeatures2.add(result);
+			}
 
 			/*				
 			System.out.println("Autocorrelation: " + result[0]);
@@ -322,59 +358,46 @@ public class mutipleNormalFrame extends JFrame implements ActionListener, ItemLi
 			}
 */		
 		}
-		
-		
-		int pos = 0;
 
 		try {
 			
 			if (suboption[0]){
 				exportFile efh = new exportFile (resultName + " - 0 deg", path);
 				efh.initiateFile();
-				for(double[] array: hfeatures){
-					efh.fileProcessing(array, imageName.get(pos));
-					pos++;
+				for(int pos = 0; pos < Math.max(hfeatures1.size(), hfeatures2.size()); pos ++){
+					efh.fileProcessing1(hfeatures2.get(pos), imageName.get(pos));
+					efh.fileProcessing2(hfeatures1.get(pos));
 				}
-				
-				pos = 0;
 			}
 			
 			if (suboption[1]){
 				exportFile efd = new exportFile (resultName + " - 45 deg", path);
 				efd.initiateFile();
 				
-				for(double[] array: diafeatures){
-
-					efd.fileProcessing(array, imageName.get(pos));
-					pos++;
+				for(int pos = 0; pos < Math.max(diafeatures1.size(), diafeatures2.size()); pos ++){
+					efd.fileProcessing1(diafeatures2.get(pos), imageName.get(pos));
+					efd.fileProcessing2(diafeatures1.get(pos));
 				}
-				
-				pos = 0;
 			}
 			
 			if (suboption[2]){
 				exportFile efv = new exportFile (resultName + " - 90 deg", path);
 				efv.initiateFile();
 				
-				for(double[] array: vfeatures){
-					efv.fileProcessing(array, imageName.get(pos));
-					pos++;
+				for(int pos = 0; pos < Math.max(vfeatures1.size(), vfeatures2.size()); pos ++){
+					efv.fileProcessing1(vfeatures2.get(pos), imageName.get(pos));
+					efv.fileProcessing2(vfeatures1.get(pos));
 				}
-				
-				pos = 0;
 			}
 			
 			if (suboption[3]){
 				exportFile efa = new exportFile (resultName + " - 135 deg", path);
 				efa.initiateFile();
 				
-				for(double[] array: andiafeatures){
-
-					efa.fileProcessing(array, imageName.get(pos));
-					pos++;
+				for(int pos = 0; pos < Math.max(andiafeatures1.size(), andiafeatures2.size()); pos ++){
+					efa.fileProcessing1(andiafeatures2.get(pos), imageName.get(pos));
+					efa.fileProcessing2(andiafeatures1.get(pos));
 				}
-				
-				pos = 0;
 			}
 			
 			
@@ -383,11 +406,11 @@ public class mutipleNormalFrame extends JFrame implements ActionListener, ItemLi
 			exportFile efav = new exportFile (resultName + " - Average", path);
 			efav.initiateFile();
 			
-			for(double[] array: averfeatures){
-
-				efav.fileProcessing(array, imageName.get(pos));
-				pos++;
+			for(int pos = 0; pos < Math.max(averfeatures1.size(), averfeatures2.size()); pos ++){
+				efav.fileProcessing1(averfeatures2.get(pos), imageName.get(pos));
+				efav.fileProcessing2(averfeatures1.get(pos));
 			}
+			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

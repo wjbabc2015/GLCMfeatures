@@ -7,7 +7,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.*;
 
 import javax.swing.*;
 
@@ -189,17 +189,17 @@ public class mutipleNormalFrame extends JFrame implements ActionListener, ItemLi
 		File loadingFile = new File (path + folderName);
 		File[] allFiles = loadingFile.listFiles();
 		
-		ArrayList<double[]> hfeatures1 = new ArrayList<double[]>();
-		ArrayList<double[]> vfeatures1 = new ArrayList<double[]>();
-		ArrayList<double[]> diafeatures1 = new ArrayList<double[]>();
-		ArrayList<double[]> andiafeatures1 = new ArrayList<double[]>();
-		ArrayList<double[]> averfeatures1 = new ArrayList<double[]>();
+		Map<String, double[]> hfeatures1 = new HashMap<String, double[]>();
+		Map<String, double[]> vfeatures1 = new HashMap<String, double[]>();
+		Map<String, double[]> diafeatures1 = new HashMap<String, double[]>();
+		Map<String, double[]> andiafeatures1 = new HashMap<String, double[]>();
+		Map<String, double[]> averfeatures1 = new HashMap<String, double[]>();
 		
-		ArrayList<double[]> hfeatures2 = new ArrayList<double[]>();
-		ArrayList<double[]> vfeatures2 = new ArrayList<double[]>();
-		ArrayList<double[]> diafeatures2 = new ArrayList<double[]>();
-		ArrayList<double[]> andiafeatures2 = new ArrayList<double[]>();
-		ArrayList<double[]> averfeatures2 = new ArrayList<double[]>();
+		Map<String, double[]> hfeatures2 = new HashMap<String, double[]>();
+		Map<String, double[]> vfeatures2 = new HashMap<String, double[]>();
+		Map<String, double[]> diafeatures2 = new HashMap<String, double[]>();
+		Map<String, double[]> andiafeatures2 = new HashMap<String, double[]>();
+		Map<String, double[]> averfeatures2 = new HashMap<String, double[]>();
 		
 		ArrayList<String> imageName = new ArrayList<String>();
 		
@@ -247,9 +247,9 @@ public class mutipleNormalFrame extends JFrame implements ActionListener, ItemLi
 				hresult = hgf.getResult();
 				
 				if (tag == 1){
-					hfeatures1.add(hresult);
+					hfeatures1.put(outFileName, hresult);
 				}else {
-					hfeatures2.add(hresult);
+					hfeatures2.put(outFileName, hresult);;
 				}
 				
 				count ++;
@@ -265,9 +265,9 @@ public class mutipleNormalFrame extends JFrame implements ActionListener, ItemLi
 				vresult = vgf.getResult();
 				
 				if (tag == 1){
-					vfeatures1.add(vresult);
+					vfeatures1.put(outFileName, vresult);
 				}else {
-					vfeatures2.add(vresult);
+					vfeatures2.put(outFileName, vresult);
 				}
 				
 				count ++;
@@ -283,9 +283,9 @@ public class mutipleNormalFrame extends JFrame implements ActionListener, ItemLi
 				dresult = dgf.getResult();
 				
 				if (tag == 1){
-					diafeatures1.add(dresult);
+					diafeatures1.put(outFileName, dresult);
 				}else{
-					diafeatures2.add(dresult);
+					diafeatures2.put(outFileName, dresult);
 				}
 				
 				count ++;
@@ -301,62 +301,26 @@ public class mutipleNormalFrame extends JFrame implements ActionListener, ItemLi
 				aresult = agf.getResult();
 				
 				if (tag == 1){
-					andiafeatures1.add(aresult);
+					andiafeatures1.put(outFileName, aresult);
 				}else {
-					andiafeatures2.add(aresult);
+					andiafeatures2.put(outFileName, aresult);
 				}
 				
 				count ++;
 			}
 			
-			//glcm = matrixNormalization (glcm, count);
-			
-			//ef.outCVS(glcm);
-
-//System.out.println(count + " " + elementDis + " " + isSymetric + " " + angle[0] + " " + angle[1] + " " + angle[2] + " " + angle[3]);
-/*			
-			for (int r = 0; r < 256; r ++){
-				for (int c = 0; c < 256; c ++){
-					glcm[r][c] /= count;
-				}
-			}
-*/			double[] result = new double[aresult.length];
+			double[] result = new double[aresult.length];
 
 			for (int r = 0; r < result.length; r ++) {
 				result[r] = (hresult[r] + vresult[r] + dresult[r] + aresult[r]) / count;
 			}
 			
 			if (tag == 1){
-				averfeatures1.add(result);
+				averfeatures1.put(outFileName, result);
 			}else {
-				averfeatures2.add(result);
+				averfeatures2.put(outFileName, result);
 			}
-
-			/*				
-			System.out.println("Autocorrelation: " + result[0]);
-			System.out.println("Contrast: " + result[1]);
-			System.out.println("Correlation: " + result[2]);
-			System.out.println("Cluster Prominence: " + result[3]);
-			System.out.println("Cluster Shade: " + result[4]);
-			System.out.println("Dissimilarity: " + result[5]);
-			System.out.println("Energy: " + result[6]);
-			System.out.println("Entropy: " + result[7]);
-			System.out.println("Homogeneity: " + result[8]);
-			System.out.println("Maximum Probability: " + result[9]);
-			System.out.println("Variance: " + result[10]);
-			System.out.println("Sum Average: " + result[11]);
-			System.out.println("Sum Entropy: " + result[12]);
-			System.out.println("Difference Entropy: " + result[13]);
-			System.out.println("IDM: " + result[14]);
-			
-				
-			for (int a = 0; a < 256 ;a ++ ) {
-				for (int b= 0; b< 256 ; b ++ ) {
-					System.out.print(glcm[a][b] + " ");
-				}
-				System.out.println();
-			}
-*/		
+	
 		}
 
 		try {
@@ -364,9 +328,21 @@ public class mutipleNormalFrame extends JFrame implements ActionListener, ItemLi
 			if (suboption[0]){
 				exportFile efh = new exportFile (resultName + " - 0 deg", path);
 				efh.initiateFile();
-				for(int pos = 0; pos < Math.max(hfeatures1.size(), hfeatures2.size()); pos ++){
-					efh.fileProcessing1(hfeatures2.get(pos), imageName.get(pos));
-					efh.fileProcessing2(hfeatures1.get(pos));
+				
+				for(String name : imageName){
+					double[] sResult = new double[20];
+					double[] pResult = new double[20];
+					
+					if (hfeatures2.containsKey(name)){
+						sResult = hfeatures2.get(name);
+					}
+					
+					if (hfeatures1.containsKey(name)){
+						pResult = hfeatures1.get(name);
+					}
+					
+					efh.fileProcessing1(sResult, name);
+					efh.fileProcessing2(pResult);
 				}
 			}
 			
@@ -374,9 +350,20 @@ public class mutipleNormalFrame extends JFrame implements ActionListener, ItemLi
 				exportFile efd = new exportFile (resultName + " - 45 deg", path);
 				efd.initiateFile();
 				
-				for(int pos = 0; pos < Math.max(diafeatures1.size(), diafeatures2.size()); pos ++){
-					efd.fileProcessing1(diafeatures2.get(pos), imageName.get(pos));
-					efd.fileProcessing2(diafeatures1.get(pos));
+				for(String name : imageName){
+					double[] sResult = new double[20];
+					double[] pResult = new double[20];
+					
+					if (hfeatures2.containsKey(name)){
+						sResult = hfeatures2.get(name);
+					}
+					
+					if (hfeatures1.containsKey(name)){
+						pResult = hfeatures1.get(name);
+					}
+					
+					efd.fileProcessing1(sResult, name);
+					efd.fileProcessing2(pResult);
 				}
 			}
 			
@@ -384,9 +371,20 @@ public class mutipleNormalFrame extends JFrame implements ActionListener, ItemLi
 				exportFile efv = new exportFile (resultName + " - 90 deg", path);
 				efv.initiateFile();
 				
-				for(int pos = 0; pos < Math.max(vfeatures1.size(), vfeatures2.size()); pos ++){
-					efv.fileProcessing1(vfeatures2.get(pos), imageName.get(pos));
-					efv.fileProcessing2(vfeatures1.get(pos));
+				for(String name : imageName){
+					double[] sResult = new double[20];
+					double[] pResult = new double[20];
+					
+					if (hfeatures2.containsKey(name)){
+						sResult = hfeatures2.get(name);
+					}
+					
+					if (hfeatures1.containsKey(name)){
+						pResult = hfeatures1.get(name);
+					}
+					
+					efv.fileProcessing1(sResult, name);
+					efv.fileProcessing2(pResult);
 				}
 			}
 			
@@ -394,9 +392,20 @@ public class mutipleNormalFrame extends JFrame implements ActionListener, ItemLi
 				exportFile efa = new exportFile (resultName + " - 135 deg", path);
 				efa.initiateFile();
 				
-				for(int pos = 0; pos < Math.max(andiafeatures1.size(), andiafeatures2.size()); pos ++){
-					efa.fileProcessing1(andiafeatures2.get(pos), imageName.get(pos));
-					efa.fileProcessing2(andiafeatures1.get(pos));
+				for(String name : imageName){
+					double[] sResult = new double[20];
+					double[] pResult = new double[20];
+					
+					if (hfeatures2.containsKey(name)){
+						sResult = hfeatures2.get(name);
+					}
+					
+					if (hfeatures1.containsKey(name)){
+						pResult = hfeatures1.get(name);
+					}
+					
+					efa.fileProcessing1(sResult, name);
+					efa.fileProcessing2(pResult);
 				}
 			}
 			
@@ -406,9 +415,20 @@ public class mutipleNormalFrame extends JFrame implements ActionListener, ItemLi
 			exportFile efav = new exportFile (resultName + " - Average", path);
 			efav.initiateFile();
 			
-			for(int pos = 0; pos < Math.max(averfeatures1.size(), averfeatures2.size()); pos ++){
-				efav.fileProcessing1(averfeatures2.get(pos), imageName.get(pos));
-				efav.fileProcessing2(averfeatures1.get(pos));
+			for(String name : imageName){
+				double[] sResult = new double[20];
+				double[] pResult = new double[20];
+				
+				if (hfeatures2.containsKey(name)){
+					sResult = hfeatures2.get(name);
+				}
+				
+				if (hfeatures1.containsKey(name)){
+					pResult = hfeatures1.get(name);
+				}
+				
+				efav.fileProcessing1(sResult, name);
+				efav.fileProcessing2(pResult);
 			}
 			
 		} catch (IOException e) {

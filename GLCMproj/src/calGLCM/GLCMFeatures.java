@@ -38,7 +38,7 @@ public class GLCMFeatures {
 	public GLCMFeatures (double[][] glcm){
 		
 		this.matrix = glcm;
-		result = new double [17];
+		result = new double [20];
 		mulContrast = new double[256][256];
 		mulDissimilarity = new double[256][256];
 		

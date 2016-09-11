@@ -177,13 +177,13 @@ public class exportFile {
 			sb.append(result[16]);
 			sb.append(',');
 			
-			sb.append("");
+			sb.append(result[17]);
 			sb.append(',');
 			
-			sb.append("");
+			sb.append(result[18]);
 			sb.append(',');
 			
-			sb.append("");
+			sb.append(result[19]);
 			sb.append(',');
 			
 			pw.write(sb.toString());
@@ -254,13 +254,13 @@ public void fileProcessing2 (double[] result) throws IOException{
 			sb.append(result[16]);
 			sb.append(',');
 			
-			sb.append("");
+			sb.append(result[17]);
 			sb.append(',');
 			
-			sb.append("");
+			sb.append(result[18]);
 			sb.append(',');
 			
-			sb.append("");
+			sb.append(result[19]);
 			
 			sb.append('\n');
 			

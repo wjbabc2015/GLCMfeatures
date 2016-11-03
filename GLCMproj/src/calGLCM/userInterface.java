@@ -33,7 +33,7 @@ public class userInterface extends JFrame implements ActionListener {
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
 		
-		title =new JLabel ("GLCM Normalization Options: ");
+		title =new JLabel ("GLCM Texture Features: ");
 		title.setFont(new Font("Serif", Font.ITALIC, 20));
 		pathTitle = new JLabel ("PATH:");
 		pathTitle.setFont(new Font("Serif", Font.BOLD, 10));

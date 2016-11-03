@@ -161,7 +161,7 @@ public class mutipleNormalFrame extends JFrame implements ActionListener, ItemLi
 		printUpLeft.addItemListener(this);
 		
 	}
-	
+/*	
 	private double[][] mergeMatrix (double[][] mainMatrix, double[][] addMatrix){
 		
 		for (int a = 0; a < 256; a++){
@@ -183,7 +183,7 @@ public class mutipleNormalFrame extends JFrame implements ActionListener, ItemLi
 		}
 		return matrix;
 	}
-	
+*/	
 	private void runGLCMprocess (String folderName, String resultName, int dis, boolean sym, boolean[] subangle, boolean[] suboption){
 		
 		File loadingFile = new File (path + folderName);
@@ -234,7 +234,7 @@ public class mutipleNormalFrame extends JFrame implements ActionListener, ItemLi
 			
 			//ef.outCVS(matrix);
 			
-			double[][] glcm = new double[256][256];
+			//double[][] glcm = new double[256][256];
 			int count = 0;
 			
 			if (subangle[0]){
@@ -446,9 +446,11 @@ public class mutipleNormalFrame extends JFrame implements ActionListener, ItemLi
 			
 			elementDis = Integer.parseInt(distance.getText());
 			
-			runGLCMprocess("p-polarizor", "P-Polarizor", elementDis, isSymetric, angle, options);
+			runGLCMprocess("Cell", "Cell", elementDis, isSymetric, angle, options);
 			
-			//runGLCMprocess("s-polarizor", "S-Polarizor", elementDis, isSymetric, angle, options);
+			runGLCMprocess("Debris", "Debris", elementDis, isSymetric, angle, options);
+			
+			runGLCMprocess("Strip", "Strip", elementDis, isSymetric, angle, options);
 			
 			long endTime   = System.currentTimeMillis();
 			long totalTime = endTime - startTime;

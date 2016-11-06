@@ -28,7 +28,7 @@ public class loadImage {
 		try {
 			img = ImageIO.read(file);
 			grayLevelMatrix = imageToGray (img);
-			testPixel = testPixel(img);
+			//testPixel = testPixel(img);
 			
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -101,25 +101,6 @@ public class loadImage {
 		loadImage lI = new loadImage (loadingFile);
 		
 		int[][] tempResult = lI.getGrayLevelMatrix();
-		//int[] testResult = lI.getRGBvalue();
-		/*				
-		for (int row = 250; row < 260; row ++){
-			for (int column = 230; column < 240; column ++){
-				System.out.print(tempResult[row][column] + " ");
-			}
-			System.out.println();
-		}
-		
-		//System.out.println(tempResult.length + " " + tempResult[1].length);
-	
-		System.out.println(tempResult[32][242]);
-		
-		System.out.println(testResult[0] + " " + testResult[1] + " " + testResult[2]);
-		
-		loadImage lI = new loadImage();
-		Image i = lI.loadbitmap("C:/Users/jiabin/Desktop/GLCM_Cal/Image/45deg/camera0/", "PicA1009.bmp");*/
-		
-		//exportFile ef = new exportFile();
-		//ef.outCVS (tempResult);
+
 	}
 }

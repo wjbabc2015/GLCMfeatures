@@ -96,7 +96,6 @@ public class loadImage {
 	public static void main(String[] args) {
 		
 		File loadingFile = new File ("C:/Users/jiabin/Desktop/GLCM_Cal/Image/45deg/camera0/PicA1009.bmp");
-		//File loadingFile = new File ("C:/Users/jiabin/Desktop/Zhen Bi/5.tiff");
 		
 		loadImage lI = new loadImage (loadingFile);
 		

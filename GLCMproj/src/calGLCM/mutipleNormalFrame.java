@@ -260,14 +260,14 @@ public class mutipleNormalFrame extends JFrame implements ActionListener, ItemLi
 				
 				//glcm = mergeMatrix(glcm, glcm2.getGLCM());
 				
-				GLCMFeatures vgf = new GLCMFeatures (glcm2.getGLCM());
+				GLCMFeatures diagf = new GLCMFeatures (glcm2.getGLCM());
 				
-				vresult = vgf.getResult();
+				dresult = diagf.getResult();
 				
 				if (tag == 1){
-					vfeatures1.put(outFileName, vresult);
+					diafeatures1.put(outFileName, dresult);
 				}else {
-					vfeatures2.put(outFileName, vresult);
+					diafeatures2.put(outFileName, dresult);
 				}
 				
 				count ++;
@@ -278,14 +278,14 @@ public class mutipleNormalFrame extends JFrame implements ActionListener, ItemLi
 				
 				//glcm = mergeMatrix(glcm, glcm3.getGLCM());
 				
-				GLCMFeatures dgf = new GLCMFeatures (glcm3.getGLCM());
+				GLCMFeatures vgf = new GLCMFeatures (glcm3.getGLCM());
 				
-				dresult = dgf.getResult();
+				vresult = vgf.getResult();
 				
 				if (tag == 1){
-					diafeatures1.put(outFileName, dresult);
+					vfeatures1.put(outFileName, vresult);
 				}else{
-					diafeatures2.put(outFileName, dresult);
+					vfeatures2.put(outFileName, vresult);
 				}
 				
 				count ++;
@@ -355,11 +355,11 @@ public class mutipleNormalFrame extends JFrame implements ActionListener, ItemLi
 					double[] pResult = new double[20];
 					
 					if (hfeatures2.containsKey(name)){
-						sResult = hfeatures2.get(name);
+						sResult = diafeatures2.get(name);
 					}
 					
 					if (hfeatures1.containsKey(name)){
-						pResult = hfeatures1.get(name);
+						pResult = diafeatures1.get(name);
 					}
 					
 					efd.fileProcessing1(sResult, name);
@@ -376,11 +376,11 @@ public class mutipleNormalFrame extends JFrame implements ActionListener, ItemLi
 					double[] pResult = new double[20];
 					
 					if (hfeatures2.containsKey(name)){
-						sResult = hfeatures2.get(name);
+						sResult = vfeatures2.get(name);
 					}
 					
 					if (hfeatures1.containsKey(name)){
-						pResult = hfeatures1.get(name);
+						pResult = vfeatures1.get(name);
 					}
 					
 					efv.fileProcessing1(sResult, name);
@@ -397,11 +397,11 @@ public class mutipleNormalFrame extends JFrame implements ActionListener, ItemLi
 					double[] pResult = new double[20];
 					
 					if (hfeatures2.containsKey(name)){
-						sResult = hfeatures2.get(name);
+						sResult = andiafeatures2.get(name);
 					}
 					
 					if (hfeatures1.containsKey(name)){
-						pResult = hfeatures1.get(name);
+						pResult = andiafeatures1.get(name);
 					}
 					
 					efa.fileProcessing1(sResult, name);
@@ -420,11 +420,11 @@ public class mutipleNormalFrame extends JFrame implements ActionListener, ItemLi
 				double[] pResult = new double[20];
 				
 				if (hfeatures2.containsKey(name)){
-					sResult = hfeatures2.get(name);
+					sResult = averfeatures2.get(name);
 				}
 				
 				if (hfeatures1.containsKey(name)){
-					pResult = hfeatures1.get(name);
+					pResult = averfeatures1.get(name);
 				}
 				
 				efav.fileProcessing1(sResult, name);

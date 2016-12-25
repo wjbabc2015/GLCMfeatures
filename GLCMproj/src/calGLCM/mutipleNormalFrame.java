@@ -354,11 +354,11 @@ public class mutipleNormalFrame extends JFrame implements ActionListener, ItemLi
 					double[] sResult = new double[20];
 					double[] pResult = new double[20];
 					
-					if (hfeatures2.containsKey(name)){
+					if (diafeatures2.containsKey(name)){
 						sResult = diafeatures2.get(name);
 					}
 					
-					if (hfeatures1.containsKey(name)){
+					if (diafeatures1.containsKey(name)){
 						pResult = diafeatures1.get(name);
 					}
 					
@@ -375,11 +375,11 @@ public class mutipleNormalFrame extends JFrame implements ActionListener, ItemLi
 					double[] sResult = new double[20];
 					double[] pResult = new double[20];
 					
-					if (hfeatures2.containsKey(name)){
+					if (vfeatures2.containsKey(name)){
 						sResult = vfeatures2.get(name);
 					}
 					
-					if (hfeatures1.containsKey(name)){
+					if (vfeatures1.containsKey(name)){
 						pResult = vfeatures1.get(name);
 					}
 					
@@ -396,11 +396,11 @@ public class mutipleNormalFrame extends JFrame implements ActionListener, ItemLi
 					double[] sResult = new double[20];
 					double[] pResult = new double[20];
 					
-					if (hfeatures2.containsKey(name)){
+					if (andiafeatures2.containsKey(name)){
 						sResult = andiafeatures2.get(name);
 					}
 					
-					if (hfeatures1.containsKey(name)){
+					if (andiafeatures1.containsKey(name)){
 						pResult = andiafeatures1.get(name);
 					}
 					
@@ -419,11 +419,11 @@ public class mutipleNormalFrame extends JFrame implements ActionListener, ItemLi
 				double[] sResult = new double[20];
 				double[] pResult = new double[20];
 				
-				if (hfeatures2.containsKey(name)){
+				if (averfeatures2.containsKey(name)){
 					sResult = averfeatures2.get(name);
 				}
 				
-				if (hfeatures1.containsKey(name)){
+				if (averfeatures1.containsKey(name)){
 					pResult = averfeatures1.get(name);
 				}
 				
@@ -446,9 +446,9 @@ public class mutipleNormalFrame extends JFrame implements ActionListener, ItemLi
 			
 			elementDis = Integer.parseInt(distance.getText());
 			
-			runGLCMprocess("Cell", "Cell", elementDis, isSymetric, angle, options);
+			//runGLCMprocess("Cell", "Cell", elementDis, isSymetric, angle, options);
 			
-			runGLCMprocess("Debris", "Debris", elementDis, isSymetric, angle, options);
+			//runGLCMprocess("Debris", "Debris", elementDis, isSymetric, angle, options);
 			
 			runGLCMprocess("Strip", "Strip", elementDis, isSymetric, angle, options);
 			

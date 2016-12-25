@@ -10,8 +10,8 @@ public class mainCal {
 
 	public static void main(String[] args) {
 		
-		userInterface ui = new userInterface ("C:/Users/wangj15/Desktop/Diffraction_Image/");
-		
+		//userInterface ui = new userInterface ("C:/Users/wangj15/Desktop/Diffraction_Image/");
+		userInterface ui = new userInterface ("C:/Users/jerem/Desktop/Diffraction_Image/");
 	}
 
 }
